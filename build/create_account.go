@@ -59,3 +59,10 @@ func (m NativeAmount) MutateCreateAccount(o *xdr.CreateAccountOp) (err error) {
 	o.StartingBalance, err = amount.Parse(m.Amount)
 	return
 }
+
+// MutateCreateAccount for NativeAmount sets the CreateAccountOp's
+// StartingBalance field
+func (m AccountType) MutateCreateAccount(o *xdr.CreateAccountOp) (err error) {
+	o.Body.AccountType = xdr.AccountType(m)
+	return
+}

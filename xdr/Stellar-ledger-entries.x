@@ -14,6 +14,21 @@ typedef string string64<64>;
 typedef uint64 SequenceNumber;
 typedef opaque DataValue<64>; 
 
+enum AccountType
+{
+    ACCOUNT_ANONYMOUS_USER = 0,
+    ACCOUNT_AGENT = 1,
+    ACCOUNT_MASTER = 2
+};
+
+enum SignerType
+{
+    SIGNER_GENERAL = 0,
+    SIGNER_ADMIN = 1,
+    SIGNER_EMISSION = 2,
+    SIGNER_COMMISSION = 3
+};
+
 enum AssetType
 {
     ASSET_TYPE_NATIVE = 0,
@@ -72,6 +87,7 @@ struct Signer
 {
     SignerKey key;
     uint32 weight; // really only need 1byte
+    uint32 signerType;
 };
 
 enum AccountFlags
@@ -100,6 +116,7 @@ enum AccountFlags
 struct AccountEntry
 {
     AccountID accountID;      // master public key for this account
+    uint32 accountType;       //
     int64 balance;            // in stroops
     SequenceNumber seqNum;    // last sequence number used for this account
     uint32 numSubEntries;     // number of sub-entries this account has
@@ -113,7 +130,7 @@ struct AccountEntry
     // thresholds stores unsigned bytes: [weight of master|low|medium|high]
     Thresholds thresholds;
 
-    Signer signers<20>; // possible signers for this account
+    Signer signers<50>; // possible signers for this account
 
     // reserved for future use
     union switch (int v)

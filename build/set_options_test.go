@@ -14,27 +14,32 @@ func TestSetOptions_Signer(t *testing.T) {
 		Name    string
 		Address string
 		Weight  uint32
+		SignerType  uint32
 		Error   string
 	}{
 		{
 			Name:    "AccountID",
 			Address: "GAXEMCEXBERNSRXOEKD4JAIKVECIXQCENHEBRVSPX2TTYZPMNEDSQCNQ",
 			Weight:  1,
+			SignerType: 0,
 		},
 		{
 			Name:    "hash(x)",
 			Address: "XBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWGTOG",
 			Weight:  2,
+			SignerType: 1,
 		},
 		{
 			Name:    "hash(tx)",
 			Address: "TBU2RRGLXH3E5CQHTD3ODLDF2BWDCYUSSBLLZ5GNW7JXHDIYKXZWHXL7",
 			Weight:  3,
+			SignerType: 0,
 		},
 		{
 			Name:    "Bad",
 			Address: "foo",
 			Weight:  1,
+			SignerType: 0,
 			Error:   "base32 decode failed",
 		},
 	}
@@ -44,12 +49,14 @@ func TestSetOptions_Signer(t *testing.T) {
 		m.Mutate(Signer{
 			Address: kase.Address,
 			Weight:  kase.Weight,
+			SignerType: kase.SignerType,
 		})
 
 		if kase.Error == "" {
 			if assert.NoError(t, m.Err, "Unexpected error on case %s", kase.Name) {
 				assert.Equal(t, kase.Address, m.SO.Signer.Key.Address())
 				assert.Equal(t, kase.Weight, uint32(m.SO.Signer.Weight))
+				assert.Equal(t, kase.SignerType, uint32(m.SO.Signer.SignerType))
 			}
 		} else {
 			assert.Contains(t, m.Err.Error(), kase.Error,

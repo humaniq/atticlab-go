@@ -581,6 +581,81 @@ func (e DataValue) XDRMaxSize() int {
 	return 64
 }
 
+// AccountType is an XDR Enum defines as:
+//
+//   enum AccountType
+//    {
+//        ACCOUNT_ANONYMOUS_USER = 0,
+//        ACCOUNT_AGENT = 1,
+//        ACCOUNT_MASTER = 2
+//    };
+//
+type AccountType int32
+
+const (
+	AccountTypeAccountAnonymousUser AccountType = 0
+	AccountTypeAccountAgent         AccountType = 1
+	AccountTypeAccountMaster        AccountType = 2
+)
+
+var accountTypeMap = map[int32]string{
+	0: "AccountTypeAccountAnonymousUser",
+	1: "AccountTypeAccountAgent",
+	2: "AccountTypeAccountMaster",
+}
+
+// ValidEnum validates a proposed value for this enum.  Implements
+// the Enum interface for AccountType
+func (e AccountType) ValidEnum(v int32) bool {
+	_, ok := accountTypeMap[v]
+	return ok
+}
+
+// String returns the name of `e`
+func (e AccountType) String() string {
+	name, _ := accountTypeMap[int32(e)]
+	return name
+}
+
+// SignerType is an XDR Enum defines as:
+//
+//   enum SignerType
+//    {
+//        SIGNER_GENERAL = 0,
+//        SIGNER_ADMIN = 1,
+//        SIGNER_EMISSION = 2,
+//        SIGNER_COMMISSION = 3
+//    };
+//
+type SignerType int32
+
+const (
+	SignerTypeSignerGeneral    SignerType = 0
+	SignerTypeSignerAdmin      SignerType = 1
+	SignerTypeSignerEmission   SignerType = 2
+	SignerTypeSignerCommission SignerType = 3
+)
+
+var signerTypeMap = map[int32]string{
+	0: "SignerTypeSignerGeneral",
+	1: "SignerTypeSignerAdmin",
+	2: "SignerTypeSignerEmission",
+	3: "SignerTypeSignerCommission",
+}
+
+// ValidEnum validates a proposed value for this enum.  Implements
+// the Enum interface for SignerType
+func (e SignerType) ValidEnum(v int32) bool {
+	_, ok := signerTypeMap[v]
+	return ok
+}
+
+// String returns the name of `e`
+func (e SignerType) String() string {
+	name, _ := signerTypeMap[int32(e)]
+	return name
+}
+
 // AssetType is an XDR Enum defines as:
 //
 //   enum AssetType
@@ -864,11 +939,13 @@ func (e LedgerEntryType) String() string {
 //    {
 //        SignerKey key;
 //        uint32 weight; // really only need 1byte
+//        uint32 signerType;
 //    };
 //
 type Signer struct {
-	Key    SignerKey
-	Weight Uint32
+	Key        SignerKey
+	Weight     Uint32
+	SignerType Uint32
 }
 
 // AccountFlags is an XDR Enum defines as:
@@ -957,6 +1034,7 @@ func NewAccountEntryExt(v int32, value interface{}) (result AccountEntryExt, err
 //   struct AccountEntry
 //    {
 //        AccountID accountID;      // master public key for this account
+//        uint32 accountType;       //
 //        int64 balance;            // in stroops
 //        SequenceNumber seqNum;    // last sequence number used for this account
 //        uint32 numSubEntries;     // number of sub-entries this account has
@@ -970,7 +1048,7 @@ func NewAccountEntryExt(v int32, value interface{}) (result AccountEntryExt, err
 //        // thresholds stores unsigned bytes: [weight of master|low|medium|high]
 //        Thresholds thresholds;
 //
-//        Signer signers<20>; // possible signers for this account
+//        Signer signers<50>; // possible signers for this account
 //
 //        // reserved for future use
 //        union switch (int v)
@@ -983,6 +1061,7 @@ func NewAccountEntryExt(v int32, value interface{}) (result AccountEntryExt, err
 //
 type AccountEntry struct {
 	AccountId     AccountId
+	AccountType   Uint32
 	Balance       Int64
 	SeqNum        SequenceNumber
 	NumSubEntries Uint32
@@ -990,7 +1069,7 @@ type AccountEntry struct {
 	Flags         Uint32
 	HomeDomain    String32
 	Thresholds    Thresholds
-	Signers       []Signer `xdrmaxsize:"20"`
+	Signers       []Signer `xdrmaxsize:"50"`
 	Ext           AccountEntryExt
 }
 
@@ -1577,7 +1656,9 @@ type DecoratedSignature struct {
 //        ALLOW_TRUST = 7,
 //        ACCOUNT_MERGE = 8,
 //        INFLATION = 9,
-//        MANAGE_DATA = 10
+//        MANAGE_DATA = 10,
+//        EMISSION = 11,
+//        SETTLEMENT = 12
 //    };
 //
 type OperationType int32
@@ -1594,6 +1675,8 @@ const (
 	OperationTypeAccountMerge       OperationType = 8
 	OperationTypeInflation          OperationType = 9
 	OperationTypeManageData         OperationType = 10
+	OperationTypeEmission           OperationType = 11
+	OperationTypeSettlement         OperationType = 12
 )
 
 var operationTypeMap = map[int32]string{
@@ -1608,6 +1691,8 @@ var operationTypeMap = map[int32]string{
 	8:  "OperationTypeAccountMerge",
 	9:  "OperationTypeInflation",
 	10: "OperationTypeManageData",
+	11: "OperationTypeEmission",
+	12: "OperationTypeSettlement",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -1623,17 +1708,93 @@ func (e OperationType) String() string {
 	return name
 }
 
+// CreateAccountOpBody is an XDR NestedUnion defines as:
+//
+//   union switch (AccountType accountType)
+//        {
+//        case ACCOUNT_ANONYMOUS_USER:
+//            void;
+//        default:
+//            void;
+//        }
+//
+type CreateAccountOpBody struct {
+	AccountType AccountType
+}
+
+// SwitchFieldName returns the field name in which this union's
+// discriminant is stored
+func (u CreateAccountOpBody) SwitchFieldName() string {
+	return "AccountType"
+}
+
+// ArmForSwitch returns which field name should be used for storing
+// the value for an instance of CreateAccountOpBody
+func (u CreateAccountOpBody) ArmForSwitch(sw int32) (string, bool) {
+	switch AccountType(sw) {
+	case AccountTypeAccountAnonymousUser:
+		return "", true
+	default:
+		return "", true
+	}
+}
+
+// NewCreateAccountOpBody creates a new  CreateAccountOpBody.
+func NewCreateAccountOpBody(accountType AccountType, value interface{}) (result CreateAccountOpBody, err error) {
+	result.AccountType = accountType
+	switch AccountType(accountType) {
+	case AccountTypeAccountAnonymousUser:
+		// void
+	default:
+		// void
+	}
+	return
+}
+
 // CreateAccountOp is an XDR Struct defines as:
 //
 //   struct CreateAccountOp
 //    {
 //        AccountID destination; // account to create
 //        int64 startingBalance; // amount they end up with
+//        union switch (AccountType accountType)
+//        {
+//        case ACCOUNT_ANONYMOUS_USER:
+//            void;
+//        default:
+//            void;
+//        }
+//        body;
 //    };
 //
 type CreateAccountOp struct {
 	Destination     AccountId
 	StartingBalance Int64
+	Body            CreateAccountOpBody
+}
+
+// EmissionOp is an XDR Struct defines as:
+//
+//   struct EmissionOp
+//    {
+//        AccountID destination; // recipient of the payment
+//        int64 amount;          // amount they end up with
+//    };
+//
+type EmissionOp struct {
+	Destination AccountId
+	Amount      Int64
+}
+
+// SettlementOp is an XDR Struct defines as:
+//
+//   struct SettlementOp
+//    {
+//        int64 amount;          // amount they want to destroy
+//    };
+//
+type SettlementOp struct {
+	Amount Int64
 }
 
 // PaymentOp is an XDR Struct defines as:
@@ -1939,6 +2100,10 @@ type ManageDataOp struct {
 //            void;
 //        case MANAGE_DATA:
 //            ManageDataOp manageDataOp;
+//        case EMISSION:
+//            EmissionOp emissionOp;
+//        case SETTLEMENT:
+//            SettlementOp settlementOp;
 //        }
 //
 type OperationBody struct {
@@ -1953,6 +2118,8 @@ type OperationBody struct {
 	AllowTrustOp         *AllowTrustOp
 	Destination          *AccountId
 	ManageDataOp         *ManageDataOp
+	EmissionOp           *EmissionOp
+	SettlementOp         *SettlementOp
 }
 
 // SwitchFieldName returns the field name in which this union's
@@ -1987,6 +2154,10 @@ func (u OperationBody) ArmForSwitch(sw int32) (string, bool) {
 		return "", true
 	case OperationTypeManageData:
 		return "ManageDataOp", true
+	case OperationTypeEmission:
+		return "EmissionOp", true
+	case OperationTypeSettlement:
+		return "SettlementOp", true
 	}
 	return "-", false
 }
@@ -2067,6 +2238,20 @@ func NewOperationBody(aType OperationType, value interface{}) (result OperationB
 			return
 		}
 		result.ManageDataOp = &tv
+	case OperationTypeEmission:
+		tv, ok := value.(EmissionOp)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be EmissionOp")
+			return
+		}
+		result.EmissionOp = &tv
+	case OperationTypeSettlement:
+		tv, ok := value.(SettlementOp)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be SettlementOp")
+			return
+		}
+		result.SettlementOp = &tv
 	}
 	return
 }
@@ -2321,6 +2506,56 @@ func (u OperationBody) GetManageDataOp() (result ManageDataOp, ok bool) {
 	return
 }
 
+// MustEmissionOp retrieves the EmissionOp value from the union,
+// panicing if the value is not set.
+func (u OperationBody) MustEmissionOp() EmissionOp {
+	val, ok := u.GetEmissionOp()
+
+	if !ok {
+		panic("arm EmissionOp is not set")
+	}
+
+	return val
+}
+
+// GetEmissionOp retrieves the EmissionOp value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationBody) GetEmissionOp() (result EmissionOp, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "EmissionOp" {
+		result = *u.EmissionOp
+		ok = true
+	}
+
+	return
+}
+
+// MustSettlementOp retrieves the SettlementOp value from the union,
+// panicing if the value is not set.
+func (u OperationBody) MustSettlementOp() SettlementOp {
+	val, ok := u.GetSettlementOp()
+
+	if !ok {
+		panic("arm SettlementOp is not set")
+	}
+
+	return val
+}
+
+// GetSettlementOp retrieves the SettlementOp value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationBody) GetSettlementOp() (result SettlementOp, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "SettlementOp" {
+		result = *u.SettlementOp
+		ok = true
+	}
+
+	return
+}
+
 // Operation is an XDR Struct defines as:
 //
 //   struct Operation
@@ -2354,6 +2589,10 @@ func (u OperationBody) GetManageDataOp() (result ManageDataOp, ok bool) {
 //            void;
 //        case MANAGE_DATA:
 //            ManageDataOp manageDataOp;
+//        case EMISSION:
+//            EmissionOp emissionOp;
+//        case SETTLEMENT:
+//            SettlementOp settlementOp;
 //        }
 //        body;
 //    };
@@ -2822,17 +3061,21 @@ type ClaimOfferAtom struct {
 //        CREATE_ACCOUNT_UNDERFUNDED = -2, // not enough funds in source account
 //        CREATE_ACCOUNT_LOW_RESERVE =
 //            -3, // would create an account below the min reserve
-//        CREATE_ACCOUNT_ALREADY_EXIST = -4 // account already exists
+//        CREATE_ACCOUNT_ALREADY_EXIST = -4, // account already exists
+//        CREATE_ACCOUNT_NOT_AUTHORIZED_TYPE = -5,
+//        CREATE_ACCOUNT_WRONG_TYPE = -6
 //    };
 //
 type CreateAccountResultCode int32
 
 const (
-	CreateAccountResultCodeCreateAccountSuccess      CreateAccountResultCode = 0
-	CreateAccountResultCodeCreateAccountMalformed    CreateAccountResultCode = -1
-	CreateAccountResultCodeCreateAccountUnderfunded  CreateAccountResultCode = -2
-	CreateAccountResultCodeCreateAccountLowReserve   CreateAccountResultCode = -3
-	CreateAccountResultCodeCreateAccountAlreadyExist CreateAccountResultCode = -4
+	CreateAccountResultCodeCreateAccountSuccess           CreateAccountResultCode = 0
+	CreateAccountResultCodeCreateAccountMalformed         CreateAccountResultCode = -1
+	CreateAccountResultCodeCreateAccountUnderfunded       CreateAccountResultCode = -2
+	CreateAccountResultCodeCreateAccountLowReserve        CreateAccountResultCode = -3
+	CreateAccountResultCodeCreateAccountAlreadyExist      CreateAccountResultCode = -4
+	CreateAccountResultCodeCreateAccountNotAuthorizedType CreateAccountResultCode = -5
+	CreateAccountResultCodeCreateAccountWrongType         CreateAccountResultCode = -6
 )
 
 var createAccountResultCodeMap = map[int32]string{
@@ -2841,6 +3084,8 @@ var createAccountResultCodeMap = map[int32]string{
 	-2: "CreateAccountResultCodeCreateAccountUnderfunded",
 	-3: "CreateAccountResultCodeCreateAccountLowReserve",
 	-4: "CreateAccountResultCodeCreateAccountAlreadyExist",
+	-5: "CreateAccountResultCodeCreateAccountNotAuthorizedType",
+	-6: "CreateAccountResultCodeCreateAccountWrongType",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -2892,6 +3137,179 @@ func NewCreateAccountResult(code CreateAccountResultCode, value interface{}) (re
 	result.Code = code
 	switch CreateAccountResultCode(code) {
 	case CreateAccountResultCodeCreateAccountSuccess:
+		// void
+	default:
+		// void
+	}
+	return
+}
+
+// EmissionResultCode is an XDR Enum defines as:
+//
+//   enum EmissionResultCode
+//    {
+//        // codes considered as "success" for the operation
+//        EMISSION_SUCCESS = 0, // emission successfuly completed
+//
+//        // codes considered as "failure" for the operation
+//        EMISSION_MALFORMED = -1,          // bad input
+//        EMISSION_SRC_NOT_AUTHORIZED = -2, // source not authorized to create emission
+//        EMISSION_DEST_FULL = -3,      // destination would go above their limit
+//        EMISSION_TOTAL_EMISSION_FULL = -4      // the overflow will occur
+//    };
+//
+type EmissionResultCode int32
+
+const (
+	EmissionResultCodeEmissionSuccess           EmissionResultCode = 0
+	EmissionResultCodeEmissionMalformed         EmissionResultCode = -1
+	EmissionResultCodeEmissionSrcNotAuthorized  EmissionResultCode = -2
+	EmissionResultCodeEmissionDestFull          EmissionResultCode = -3
+	EmissionResultCodeEmissionTotalEmissionFull EmissionResultCode = -4
+)
+
+var emissionResultCodeMap = map[int32]string{
+	0:  "EmissionResultCodeEmissionSuccess",
+	-1: "EmissionResultCodeEmissionMalformed",
+	-2: "EmissionResultCodeEmissionSrcNotAuthorized",
+	-3: "EmissionResultCodeEmissionDestFull",
+	-4: "EmissionResultCodeEmissionTotalEmissionFull",
+}
+
+// ValidEnum validates a proposed value for this enum.  Implements
+// the Enum interface for EmissionResultCode
+func (e EmissionResultCode) ValidEnum(v int32) bool {
+	_, ok := emissionResultCodeMap[v]
+	return ok
+}
+
+// String returns the name of `e`
+func (e EmissionResultCode) String() string {
+	name, _ := emissionResultCodeMap[int32(e)]
+	return name
+}
+
+// EmissionResult is an XDR Union defines as:
+//
+//   union EmissionResult switch (EmissionResultCode code)
+//    {
+//    case EMISSION_SUCCESS:
+//        void;
+//    default:
+//        void;
+//    };
+//
+type EmissionResult struct {
+	Code EmissionResultCode
+}
+
+// SwitchFieldName returns the field name in which this union's
+// discriminant is stored
+func (u EmissionResult) SwitchFieldName() string {
+	return "Code"
+}
+
+// ArmForSwitch returns which field name should be used for storing
+// the value for an instance of EmissionResult
+func (u EmissionResult) ArmForSwitch(sw int32) (string, bool) {
+	switch EmissionResultCode(sw) {
+	case EmissionResultCodeEmissionSuccess:
+		return "", true
+	default:
+		return "", true
+	}
+}
+
+// NewEmissionResult creates a new  EmissionResult.
+func NewEmissionResult(code EmissionResultCode, value interface{}) (result EmissionResult, err error) {
+	result.Code = code
+	switch EmissionResultCode(code) {
+	case EmissionResultCodeEmissionSuccess:
+		// void
+	default:
+		// void
+	}
+	return
+}
+
+// SettlementResultCode is an XDR Enum defines as:
+//
+//   enum SettlementResultCode
+//    {
+//        // codes considered as "success" for the operation
+//        SETTLEMENT_SUCCESS = 0, // settlement successfuly completed
+//
+//        // codes considered as "failure" for the operation
+//        SETTLEMENT_MALFORMED = -1,          // bad input
+//        SETTLEMENT_SRC_NOT_AUTHORIZED = -2, // source not authorized to create settlement
+//        SETTLEMENT_UNDERFUNDED = -3      // not enough funds in source account
+//    };
+//
+type SettlementResultCode int32
+
+const (
+	SettlementResultCodeSettlementSuccess          SettlementResultCode = 0
+	SettlementResultCodeSettlementMalformed        SettlementResultCode = -1
+	SettlementResultCodeSettlementSrcNotAuthorized SettlementResultCode = -2
+	SettlementResultCodeSettlementUnderfunded      SettlementResultCode = -3
+)
+
+var settlementResultCodeMap = map[int32]string{
+	0:  "SettlementResultCodeSettlementSuccess",
+	-1: "SettlementResultCodeSettlementMalformed",
+	-2: "SettlementResultCodeSettlementSrcNotAuthorized",
+	-3: "SettlementResultCodeSettlementUnderfunded",
+}
+
+// ValidEnum validates a proposed value for this enum.  Implements
+// the Enum interface for SettlementResultCode
+func (e SettlementResultCode) ValidEnum(v int32) bool {
+	_, ok := settlementResultCodeMap[v]
+	return ok
+}
+
+// String returns the name of `e`
+func (e SettlementResultCode) String() string {
+	name, _ := settlementResultCodeMap[int32(e)]
+	return name
+}
+
+// SettlementResult is an XDR Union defines as:
+//
+//   union SettlementResult switch (SettlementResultCode code)
+//    {
+//    case SETTLEMENT_SUCCESS:
+//        void;
+//    default:
+//        void;
+//    };
+//
+type SettlementResult struct {
+	Code SettlementResultCode
+}
+
+// SwitchFieldName returns the field name in which this union's
+// discriminant is stored
+func (u SettlementResult) SwitchFieldName() string {
+	return "Code"
+}
+
+// ArmForSwitch returns which field name should be used for storing
+// the value for an instance of SettlementResult
+func (u SettlementResult) ArmForSwitch(sw int32) (string, bool) {
+	switch SettlementResultCode(sw) {
+	case SettlementResultCodeSettlementSuccess:
+		return "", true
+	default:
+		return "", true
+	}
+}
+
+// NewSettlementResult creates a new  SettlementResult.
+func NewSettlementResult(code SettlementResultCode, value interface{}) (result SettlementResult, err error) {
+	result.Code = code
+	switch SettlementResultCode(code) {
+	case SettlementResultCodeSettlementSuccess:
 		// void
 	default:
 		// void
@@ -3518,7 +3936,8 @@ func (u ManageOfferResult) GetSuccess() (result ManageOfferSuccessResult, ok boo
 //        SET_OPTIONS_UNKNOWN_FLAG = -6,           // can't set an unknown flag
 //        SET_OPTIONS_THRESHOLD_OUT_OF_RANGE = -7, // bad value for weight/threshold
 //        SET_OPTIONS_BAD_SIGNER = -8,             // signer cannot be masterkey
-//        SET_OPTIONS_INVALID_HOME_DOMAIN = -9     // malformed home domain
+//        SET_OPTIONS_INVALID_HOME_DOMAIN = -9,     // malformed home domain
+//        SET_OPTIONS_BAD_SIGNER_TYPE = -10        // only master can add emission/admin signer
 //    };
 //
 type SetOptionsResultCode int32
@@ -3534,19 +3953,21 @@ const (
 	SetOptionsResultCodeSetOptionsThresholdOutOfRange SetOptionsResultCode = -7
 	SetOptionsResultCodeSetOptionsBadSigner           SetOptionsResultCode = -8
 	SetOptionsResultCodeSetOptionsInvalidHomeDomain   SetOptionsResultCode = -9
+	SetOptionsResultCodeSetOptionsBadSignerType       SetOptionsResultCode = -10
 )
 
 var setOptionsResultCodeMap = map[int32]string{
-	0:  "SetOptionsResultCodeSetOptionsSuccess",
-	-1: "SetOptionsResultCodeSetOptionsLowReserve",
-	-2: "SetOptionsResultCodeSetOptionsTooManySigners",
-	-3: "SetOptionsResultCodeSetOptionsBadFlags",
-	-4: "SetOptionsResultCodeSetOptionsInvalidInflation",
-	-5: "SetOptionsResultCodeSetOptionsCantChange",
-	-6: "SetOptionsResultCodeSetOptionsUnknownFlag",
-	-7: "SetOptionsResultCodeSetOptionsThresholdOutOfRange",
-	-8: "SetOptionsResultCodeSetOptionsBadSigner",
-	-9: "SetOptionsResultCodeSetOptionsInvalidHomeDomain",
+	0:   "SetOptionsResultCodeSetOptionsSuccess",
+	-1:  "SetOptionsResultCodeSetOptionsLowReserve",
+	-2:  "SetOptionsResultCodeSetOptionsTooManySigners",
+	-3:  "SetOptionsResultCodeSetOptionsBadFlags",
+	-4:  "SetOptionsResultCodeSetOptionsInvalidInflation",
+	-5:  "SetOptionsResultCodeSetOptionsCantChange",
+	-6:  "SetOptionsResultCodeSetOptionsUnknownFlag",
+	-7:  "SetOptionsResultCodeSetOptionsThresholdOutOfRange",
+	-8:  "SetOptionsResultCodeSetOptionsBadSigner",
+	-9:  "SetOptionsResultCodeSetOptionsInvalidHomeDomain",
+	-10: "SetOptionsResultCodeSetOptionsBadSignerType",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -4177,6 +4598,10 @@ func (e OperationResultCode) String() string {
 //            InflationResult inflationResult;
 //        case MANAGE_DATA:
 //            ManageDataResult manageDataResult;
+//        case EMISSION:
+//            EmissionResult emissionResult;
+//        case SETTLEMENT:
+//            SettlementResult settlementResult;
 //        }
 //
 type OperationResultTr struct {
@@ -4192,6 +4617,8 @@ type OperationResultTr struct {
 	AccountMergeResult       *AccountMergeResult
 	InflationResult          *InflationResult
 	ManageDataResult         *ManageDataResult
+	EmissionResult           *EmissionResult
+	SettlementResult         *SettlementResult
 }
 
 // SwitchFieldName returns the field name in which this union's
@@ -4226,6 +4653,10 @@ func (u OperationResultTr) ArmForSwitch(sw int32) (string, bool) {
 		return "InflationResult", true
 	case OperationTypeManageData:
 		return "ManageDataResult", true
+	case OperationTypeEmission:
+		return "EmissionResult", true
+	case OperationTypeSettlement:
+		return "SettlementResult", true
 	}
 	return "-", false
 }
@@ -4311,6 +4742,20 @@ func NewOperationResultTr(aType OperationType, value interface{}) (result Operat
 			return
 		}
 		result.ManageDataResult = &tv
+	case OperationTypeEmission:
+		tv, ok := value.(EmissionResult)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be EmissionResult")
+			return
+		}
+		result.EmissionResult = &tv
+	case OperationTypeSettlement:
+		tv, ok := value.(SettlementResult)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be SettlementResult")
+			return
+		}
+		result.SettlementResult = &tv
 	}
 	return
 }
@@ -4590,6 +5035,56 @@ func (u OperationResultTr) GetManageDataResult() (result ManageDataResult, ok bo
 	return
 }
 
+// MustEmissionResult retrieves the EmissionResult value from the union,
+// panicing if the value is not set.
+func (u OperationResultTr) MustEmissionResult() EmissionResult {
+	val, ok := u.GetEmissionResult()
+
+	if !ok {
+		panic("arm EmissionResult is not set")
+	}
+
+	return val
+}
+
+// GetEmissionResult retrieves the EmissionResult value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationResultTr) GetEmissionResult() (result EmissionResult, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "EmissionResult" {
+		result = *u.EmissionResult
+		ok = true
+	}
+
+	return
+}
+
+// MustSettlementResult retrieves the SettlementResult value from the union,
+// panicing if the value is not set.
+func (u OperationResultTr) MustSettlementResult() SettlementResult {
+	val, ok := u.GetSettlementResult()
+
+	if !ok {
+		panic("arm SettlementResult is not set")
+	}
+
+	return val
+}
+
+// GetSettlementResult retrieves the SettlementResult value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationResultTr) GetSettlementResult() (result SettlementResult, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "SettlementResult" {
+		result = *u.SettlementResult
+		ok = true
+	}
+
+	return
+}
+
 // OperationResult is an XDR Union defines as:
 //
 //   union OperationResult switch (OperationResultCode code)
@@ -4619,6 +5114,10 @@ func (u OperationResultTr) GetManageDataResult() (result ManageDataResult, ok bo
 //            InflationResult inflationResult;
 //        case MANAGE_DATA:
 //            ManageDataResult manageDataResult;
+//        case EMISSION:
+//            EmissionResult emissionResult;
+//        case SETTLEMENT:
+//            SettlementResult settlementResult;
 //        }
 //        tr;
 //    default:

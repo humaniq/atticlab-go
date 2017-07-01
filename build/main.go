@@ -42,6 +42,9 @@ var (
 	DefaultNetwork = Network{}
 )
 
+// AccountType is a mutator capable of setting the type of the account
+type AccountType uint32
+
 // Amount is a mutator capable of setting the amount
 type Amount string
 
@@ -234,6 +237,8 @@ type ClearFlag int32
 type Signer struct {
 	Address string
 	Weight  uint32
+	SignerType 	uint32
+
 }
 
 // SourceAccount is a mutator capable of setting the source account on

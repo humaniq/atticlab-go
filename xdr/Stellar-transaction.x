@@ -25,7 +25,9 @@ enum OperationType
     ALLOW_TRUST = 7,
     ACCOUNT_MERGE = 8,
     INFLATION = 9,
-    MANAGE_DATA = 10
+    MANAGE_DATA = 10,
+    EMISSION = 11,
+    SETTLEMENT = 12
 };
 
 /* CreateAccount
@@ -41,6 +43,41 @@ struct CreateAccountOp
 {
     AccountID destination; // account to create
     int64 startingBalance; // amount they end up with
+    union switch (AccountType accountType)
+    {
+    case ACCOUNT_ANONYMOUS_USER:
+        void;
+    default:
+        void;
+    }
+    body;
+};
+
+/* Emission
+
+Create emission and send an amount in native asset to a destination account.
+
+Threshold: med
+
+Result: EmissionResult
+*/
+struct EmissionOp
+{
+    AccountID destination; // recipient of the payment
+    int64 amount;          // amount they end up with
+};
+
+/* Settlement
+
+Create settlement and destroy an amount in native asset.
+
+Threshold: med
+
+Result: SettlementResult
+*/
+struct SettlementOp
+{
+    int64 amount;          // amount they want to destroy
 };
 
 /* Payment
@@ -253,6 +290,10 @@ struct Operation
         void;
     case MANAGE_DATA:
         ManageDataOp manageDataOp;
+    case EMISSION:
+        EmissionOp emissionOp;
+    case SETTLEMENT:
+        SettlementOp settlementOp;
     }
     body;
 };
@@ -371,12 +412,57 @@ enum CreateAccountResultCode
     CREATE_ACCOUNT_UNDERFUNDED = -2, // not enough funds in source account
     CREATE_ACCOUNT_LOW_RESERVE =
         -3, // would create an account below the min reserve
-    CREATE_ACCOUNT_ALREADY_EXIST = -4 // account already exists
+    CREATE_ACCOUNT_ALREADY_EXIST = -4, // account already exists
+    CREATE_ACCOUNT_NOT_AUTHORIZED_TYPE = -5,
+    CREATE_ACCOUNT_WRONG_TYPE = -6
 };
 
 union CreateAccountResult switch (CreateAccountResultCode code)
 {
 case CREATE_ACCOUNT_SUCCESS:
+    void;
+default:
+    void;
+};
+
+/******* Emission Result ********/
+
+enum EmissionResultCode
+{
+    // codes considered as "success" for the operation
+    EMISSION_SUCCESS = 0, // emission successfuly completed
+
+    // codes considered as "failure" for the operation
+    EMISSION_MALFORMED = -1,          // bad input
+    EMISSION_SRC_NOT_AUTHORIZED = -2, // source not authorized to create emission
+    EMISSION_DEST_FULL = -3,      // destination would go above their limit
+    EMISSION_TOTAL_EMISSION_FULL = -4      // the overflow will occur
+};
+
+union EmissionResult switch (EmissionResultCode code)
+{
+case EMISSION_SUCCESS:
+    void;
+default:
+    void;
+};
+
+/******* Settlement Result ********/
+
+enum SettlementResultCode
+{
+    // codes considered as "success" for the operation
+    SETTLEMENT_SUCCESS = 0, // settlement successfuly completed
+
+    // codes considered as "failure" for the operation
+    SETTLEMENT_MALFORMED = -1,          // bad input
+    SETTLEMENT_SRC_NOT_AUTHORIZED = -2, // source not authorized to create settlement
+    SETTLEMENT_UNDERFUNDED = -3      // not enough funds in source account
+};
+
+union SettlementResult switch (SettlementResultCode code)
+{
+case SETTLEMENT_SUCCESS:
     void;
 default:
     void;
@@ -523,7 +609,8 @@ enum SetOptionsResultCode
     SET_OPTIONS_UNKNOWN_FLAG = -6,           // can't set an unknown flag
     SET_OPTIONS_THRESHOLD_OUT_OF_RANGE = -7, // bad value for weight/threshold
     SET_OPTIONS_BAD_SIGNER = -8,             // signer cannot be masterkey
-    SET_OPTIONS_INVALID_HOME_DOMAIN = -9     // malformed home domain
+    SET_OPTIONS_INVALID_HOME_DOMAIN = -9,     // malformed home domain
+    SET_OPTIONS_BAD_SIGNER_TYPE = -10        // only master can add emission/admin signer
 };
 
 union SetOptionsResult switch (SetOptionsResultCode code)
@@ -683,6 +770,10 @@ case opINNER:
         InflationResult inflationResult;
     case MANAGE_DATA:
         ManageDataResult manageDataResult;
+    case EMISSION:
+        EmissionResult emissionResult;
+    case SETTLEMENT:
+        SettlementResult settlementResult;
     }
     tr;
 default:

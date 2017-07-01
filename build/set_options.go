@@ -86,13 +86,13 @@ func (m MasterWeight) MutateTransaction(t *TransactionBuilder) error {
 }
 
 // AddSigner creates Signer mutator that sets account's signer
-func AddSigner(address string, weight uint32) Signer {
-	return Signer{address, weight}
+func AddSigner(publicKey string, weight uint32, signerType uint32) Signer {
+	return Signer{publicKey, weight, signerType}
 }
 
 // RemoveSigner creates Signer mutator that removes account's signer
 func RemoveSigner(address string) Signer {
-	return Signer{address, 0}
+	return Signer{address, 0, 0}
 }
 
 // MutateSetOptions for Signer sets the SetOptionsOp's signer field
@@ -101,6 +101,7 @@ func (m Signer) MutateSetOptions(o *xdr.SetOptionsOp) error {
 	var signer xdr.Signer
 	signer.Weight = xdr.Uint32(m.Weight)
 	err := signer.Key.SetAddress(m.Address)
+	signer.SignerType = xdr.Uint32(m.SignerType)
 	if err != nil {
 		return errors.Wrap(err, "failed to set address")
 	}
