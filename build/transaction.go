@@ -162,6 +162,20 @@ func (m Defaults) MutateTransaction(o *TransactionBuilder) error {
 	return nil
 }
 
+// MutateTransaction for EmissionBuilder causes the underylying
+// EmissionOp to be added to the operation list for the provided
+// transaction
+func (m EmissionBuilder) MutateTransaction(o *TransactionBuilder) error {
+	if m.Err != nil {
+		return m.Err
+	}
+
+	m.O.Body, m.Err = xdr.NewOperationBody(xdr.OperationTypeEmission, m.E)
+	o.TX.Operations = append(o.TX.Operations, m.O)
+	return m.Err
+}
+
+
 // MutateTransaction for InflationBuilder causes the underylying
 // InflationOp to be added to the operation list for the provided
 // transaction
