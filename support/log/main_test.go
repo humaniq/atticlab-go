@@ -9,7 +9,7 @@ import (
 	"goji.io"
 	"goji.io/pat"
 
-	"github.com/sirupsen/logrus"
+	"github.com/Sirupsen/logrus"
 	serr "github.com/stellar/go/support/errors"
 	"github.com/stellar/go/support/http/httptest"
 	"github.com/stretchr/testify/assert"
