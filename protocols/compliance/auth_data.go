@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"bitbucket.attic.pw/hum/go/support/errors"
+	"bitbucket.attic.pw/hum/go/xdr"
 )
 
 // Marshal marshals Attachment

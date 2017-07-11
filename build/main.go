@@ -11,10 +11,10 @@ package build
 import (
 	"math"
 
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/network"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"bitbucket.attic.pw/hum/go/amount"
+	"bitbucket.attic.pw/hum/go/network"
+	"bitbucket.attic.pw/hum/go/support/errors"
+	"bitbucket.attic.pw/hum/go/xdr"
 )
 
 const (

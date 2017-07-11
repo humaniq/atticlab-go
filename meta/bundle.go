@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math"
 
-	"github.com/stellar/go/xdr"
+	"bitbucket.attic.pw/hum/go/xdr"
 )
 
 // ErrMetaNotFound is returned when no meta that matches a provided filter can

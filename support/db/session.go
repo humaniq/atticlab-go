@@ -8,9 +8,9 @@ import (
 
 	sq "github.com/Masterminds/squirrel"
 	"github.com/jmoiron/sqlx"
-	"github.com/stellar/go/support/db/sqlutils"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/support/log"
+	"bitbucket.attic.pw/hum/go/support/db/sqlutils"
+	"bitbucket.attic.pw/hum/go/support/errors"
+	"bitbucket.attic.pw/hum/go/support/log"
 	"golang.org/x/net/context"
 )
 

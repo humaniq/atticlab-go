@@ -9,13 +9,13 @@ import (
 
 	"github.com/rs/cors"
 	"github.com/spf13/cobra"
-	complianceHandler "github.com/stellar/go/handlers/compliance"
-	complianceProtocol "github.com/stellar/go/protocols/compliance"
-	"github.com/stellar/go/support/app"
-	"github.com/stellar/go/support/config"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/support/http"
-	"github.com/stellar/go/support/log"
+	complianceHandler "bitbucket.attic.pw/hum/go/handlers/compliance"
+	complianceProtocol "bitbucket.attic.pw/hum/go/protocols/compliance"
+	"bitbucket.attic.pw/hum/go/support/app"
+	"bitbucket.attic.pw/hum/go/support/config"
+	"bitbucket.attic.pw/hum/go/support/errors"
+	"bitbucket.attic.pw/hum/go/support/http"
+	"bitbucket.attic.pw/hum/go/support/log"
 )
 
 // Config represents the configuration of a federation server

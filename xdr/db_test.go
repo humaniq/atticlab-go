@@ -3,7 +3,7 @@ package xdr_test
 import (
 	"database/sql"
 
-	. "github.com/stellar/go/xdr"
+	. "bitbucket.attic.pw/hum/go/xdr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"

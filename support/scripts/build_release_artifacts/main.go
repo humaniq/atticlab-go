@@ -12,8 +12,8 @@ import (
 
 	"time"
 
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/support/log"
+	"bitbucket.attic.pw/hum/go/support/errors"
+	"bitbucket.attic.pw/hum/go/support/log"
 )
 
 var extractBinName = regexp.MustCompile(`^(?P<bin>[a-z-]+)-(?P<tag>.+)$`)
@@ -32,7 +32,7 @@ func main() {
 	log.SetLevel(log.InfoLevel)
 	bin, version := extractFromTag(os.Getenv("TRAVIS_TAG"))
 	pkg := packageName(bin)
-	repo := "github.com/stellar/go"
+	repo := "bitbucket.attic.pw/hum/go"
 
 	if os.Getenv("REPO") != "" {
 		repo = os.Getenv("REPO")
@@ -72,8 +72,8 @@ func main() {
 func build(pkg, dest, version, buildOS, buildArch string) {
 	buildTime := time.Now().Format(time.RFC3339)
 
-	timeFlag := fmt.Sprintf("-X github.com/stellar/go/support/app.buildTime=%s", buildTime)
-	versionFlag := fmt.Sprintf("-X github.com/stellar/go/support/app.version=%s", version)
+	timeFlag := fmt.Sprintf("-X bitbucket.attic.pw/hum/go/support/app.buildTime=%s", buildTime)
+	versionFlag := fmt.Sprintf("-X bitbucket.attic.pw/hum/go/support/app.version=%s", version)
 
 	if buildOS == "windows" {
 		dest = dest + ".exe"

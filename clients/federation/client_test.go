@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/stellar/go/clients/stellartoml"
-	"github.com/stellar/go/support/http/httptest"
+	"bitbucket.attic.pw/hum/go/clients/stellartoml"
+	"bitbucket.attic.pw/hum/go/support/http/httptest"
 	"github.com/stretchr/testify/assert"
 )
 

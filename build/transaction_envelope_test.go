@@ -3,7 +3,7 @@ package build
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/stellar/go/support/errors"
+	"bitbucket.attic.pw/hum/go/support/errors"
 )
 
 var _ = Describe("TransactionEnvelope Mutators:", func() {

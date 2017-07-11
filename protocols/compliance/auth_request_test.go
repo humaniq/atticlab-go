@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/stellar/go/build"
-	"github.com/stellar/go/xdr"
+	"bitbucket.attic.pw/hum/go/build"
+	"bitbucket.attic.pw/hum/go/xdr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

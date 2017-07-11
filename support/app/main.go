@@ -3,7 +3,7 @@
 package app
 
 import "time"
-import "github.com/stellar/go/support/errors"
+import "bitbucket.attic.pw/hum/go/support/errors"
 
 var (
 	// ErrNoBuildTime is the error returned when no build time for the current

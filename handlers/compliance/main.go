@@ -1,7 +1,7 @@
 package compliance
 
 import (
-	"github.com/stellar/go/protocols/compliance"
+	"bitbucket.attic.pw/hum/go/protocols/compliance"
 )
 
 // Strategy defines strategy for handling auth requests.

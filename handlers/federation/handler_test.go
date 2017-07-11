@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/stellar/go/support/db/dbtest"
-	"github.com/stellar/go/support/http/httptest"
+	"bitbucket.attic.pw/hum/go/support/db/dbtest"
+	"bitbucket.attic.pw/hum/go/support/http/httptest"
 )
 
 func TestHandler(t *testing.T) {

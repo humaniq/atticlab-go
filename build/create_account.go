@@ -1,9 +1,9 @@
 package build
 
 import (
-	"github.com/stellar/go/amount"
-	"github.com/stellar/go/support/errors"
-	"github.com/stellar/go/xdr"
+	"bitbucket.attic.pw/hum/go/amount"
+	"bitbucket.attic.pw/hum/go/support/errors"
+	"bitbucket.attic.pw/hum/go/xdr"
 )
 
 // CreateAccount groups the creation of a new CreateAccountBuilder with a call

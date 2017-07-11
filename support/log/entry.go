@@ -6,7 +6,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/Sirupsen/logrus/hooks/test"
-	"github.com/stellar/go/support/errors"
+	"bitbucket.attic.pw/hum/go/support/errors"
 )
 
 func (e *Entry) SetLevel(level logrus.Level) {

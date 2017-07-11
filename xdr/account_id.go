@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/stellar/go/strkey"
+	"bitbucket.attic.pw/hum/go/strkey"
 )
 
 // Address returns the strkey encoded form of this AccountId.  This method will
