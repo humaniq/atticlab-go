@@ -16,7 +16,7 @@ func Settlement(muts ...interface{}) (result SettlementBuilder) {
 // MutateSettlement operation.  types may implement this interface to
 // specify how they modify an xdr.SettlementOp object
 type SettlementMutator interface {
-	MutateSettlement(interface{}) error
+	MutateSettlement(*xdr.SettlementOp) error
 }
 
 // SettlementBuilder represents a transaction that is being built.

@@ -16,7 +16,7 @@ func Emission(muts ...interface{}) (result EmissionBuilder) {
 // MutateEmission operation.  types may implement this interface to
 // specify how they modify an xdr.EmissionOp object
 type EmissionMutator interface {
-	MutateEmission(interface{}) error
+	MutateEmission(*xdr.EmissionOp) (error)
 }
 
 // EmissionBuilder represents a transaction that is being built.
@@ -30,6 +30,7 @@ type EmissionBuilder struct {
 func (b *EmissionBuilder) Mutate(muts ...interface{}) {
 	for _, m := range muts {
 		var err error
+
 		switch mut := m.(type) {
 		case EmissionMutator:
 			err = mut.MutateEmission(&b.E)

@@ -60,7 +60,7 @@ func (m NativeAmount) MutateCreateAccount(o *xdr.CreateAccountOp) (err error) {
 	return
 }
 
-// MutateCreateAccount for NativeAmount sets the CreateAccountOp's
+// MutateCreateAccount for AccountType sets the CreateAccountOp's
 // AccountType field
 func (m AccountType) MutateCreateAccount(o *xdr.CreateAccountOp) (err error) {
 	o.Body.AccountType = xdr.AccountType(m)
