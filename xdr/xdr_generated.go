@@ -961,7 +961,13 @@ type Signer struct {
 //        // otherwise, authorization cannot be revoked
 //        AUTH_REVOCABLE_FLAG = 0x2,
 //        // Once set, causes all AUTH_* flags to be read-only
-//        AUTH_IMMUTABLE_FLAG = 0x4
+//        AUTH_IMMUTABLE_FLAG = 0x4,
+//        // Block all incoming payments.
+//        // Can't be set or cleared by the user, but is rather set by administrators
+//        BLOCK_INCOMING = 0x8,
+//        // Block all outgoing payments.
+//        // Can't be set or cleared by the user, but is rather set by administrators
+//        BLOCK_OUTGOING = 0x10
 //    };
 //
 type AccountFlags int32
@@ -970,12 +976,16 @@ const (
 	AccountFlagsAuthRequiredFlag  AccountFlags = 1
 	AccountFlagsAuthRevocableFlag AccountFlags = 2
 	AccountFlagsAuthImmutableFlag AccountFlags = 4
+	AccountFlagsBlockIncoming     AccountFlags = 8
+	AccountFlagsBlockOutgoing     AccountFlags = 16
 )
 
 var accountFlagsMap = map[int32]string{
-	1: "AccountFlagsAuthRequiredFlag",
-	2: "AccountFlagsAuthRevocableFlag",
-	4: "AccountFlagsAuthImmutableFlag",
+	1:  "AccountFlagsAuthRequiredFlag",
+	2:  "AccountFlagsAuthRevocableFlag",
+	4:  "AccountFlagsAuthImmutableFlag",
+	8:  "AccountFlagsBlockIncoming",
+	16: "AccountFlagsBlockOutgoing",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -1658,7 +1668,10 @@ type DecoratedSignature struct {
 //        INFLATION = 9,
 //        MANAGE_DATA = 10,
 //        EMISSION = 11,
-//        SETTLEMENT = 12
+//        SETTLEMENT = 12,
+//        SPEND_FEE = 13,
+//        SET_FEE = 14,
+//        RESTRICT_ACCOUNT = 15
 //    };
 //
 type OperationType int32
@@ -1677,6 +1690,9 @@ const (
 	OperationTypeManageData         OperationType = 10
 	OperationTypeEmission           OperationType = 11
 	OperationTypeSettlement         OperationType = 12
+	OperationTypeSpendFee           OperationType = 13
+	OperationTypeSetFee             OperationType = 14
+	OperationTypeRestrictAccount    OperationType = 15
 )
 
 var operationTypeMap = map[int32]string{
@@ -1693,6 +1709,9 @@ var operationTypeMap = map[int32]string{
 	10: "OperationTypeManageData",
 	11: "OperationTypeEmission",
 	12: "OperationTypeSettlement",
+	13: "OperationTypeSpendFee",
+	14: "OperationTypeSetFee",
+	15: "OperationTypeRestrictAccount",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -2074,6 +2093,45 @@ type ManageDataOp struct {
 	DataValue *DataValue
 }
 
+// SpendFeeOp is an XDR Struct defines as:
+//
+//   struct SpendFeeOp
+//    {
+//        AccountID destination; // recipient of the payment
+//        int64 amount;          // amount they end up with
+//    };
+//
+type SpendFeeOp struct {
+	Destination AccountId
+	Amount      Int64
+}
+
+// SetFeeOp is an XDR Struct defines as:
+//
+//   struct SetFeeOp
+//    {
+//        int32 baseFee;          // amount of fee requiered per operation
+//    };
+//
+type SetFeeOp struct {
+	BaseFee Int32
+}
+
+// RestrictAccountOp is an XDR Struct defines as:
+//
+//   struct RestrictAccountOp
+//    {
+//        AccountID account; // account to restrict/allow
+//        uint32* clearFlags; // which flags to clear
+//        uint32* setFlags;   // which flags to set
+//    };
+//
+type RestrictAccountOp struct {
+	Account    AccountId
+	ClearFlags *Uint32
+	SetFlags   *Uint32
+}
+
 // OperationBody is an XDR NestedUnion defines as:
 //
 //   union switch (OperationType type)
@@ -2104,6 +2162,12 @@ type ManageDataOp struct {
 //            EmissionOp emissionOp;
 //        case SETTLEMENT:
 //            SettlementOp settlementOp;
+//        case SPEND_FEE:
+//            SpendFeeOp spendFeeOp;
+//        case SET_FEE:
+//            SetFeeOp setFeeOp;
+//        case RESTRICT_ACCOUNT:
+//            RestrictAccountOp restrictAccountOp;
 //        }
 //
 type OperationBody struct {
@@ -2120,6 +2184,9 @@ type OperationBody struct {
 	ManageDataOp         *ManageDataOp
 	EmissionOp           *EmissionOp
 	SettlementOp         *SettlementOp
+	SpendFeeOp           *SpendFeeOp
+	SetFeeOp             *SetFeeOp
+	RestrictAccountOp    *RestrictAccountOp
 }
 
 // SwitchFieldName returns the field name in which this union's
@@ -2158,6 +2225,12 @@ func (u OperationBody) ArmForSwitch(sw int32) (string, bool) {
 		return "EmissionOp", true
 	case OperationTypeSettlement:
 		return "SettlementOp", true
+	case OperationTypeSpendFee:
+		return "SpendFeeOp", true
+	case OperationTypeSetFee:
+		return "SetFeeOp", true
+	case OperationTypeRestrictAccount:
+		return "RestrictAccountOp", true
 	}
 	return "-", false
 }
@@ -2252,6 +2325,27 @@ func NewOperationBody(aType OperationType, value interface{}) (result OperationB
 			return
 		}
 		result.SettlementOp = &tv
+	case OperationTypeSpendFee:
+		tv, ok := value.(SpendFeeOp)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be SpendFeeOp")
+			return
+		}
+		result.SpendFeeOp = &tv
+	case OperationTypeSetFee:
+		tv, ok := value.(SetFeeOp)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be SetFeeOp")
+			return
+		}
+		result.SetFeeOp = &tv
+	case OperationTypeRestrictAccount:
+		tv, ok := value.(RestrictAccountOp)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be RestrictAccountOp")
+			return
+		}
+		result.RestrictAccountOp = &tv
 	}
 	return
 }
@@ -2556,6 +2650,81 @@ func (u OperationBody) GetSettlementOp() (result SettlementOp, ok bool) {
 	return
 }
 
+// MustSpendFeeOp retrieves the SpendFeeOp value from the union,
+// panicing if the value is not set.
+func (u OperationBody) MustSpendFeeOp() SpendFeeOp {
+	val, ok := u.GetSpendFeeOp()
+
+	if !ok {
+		panic("arm SpendFeeOp is not set")
+	}
+
+	return val
+}
+
+// GetSpendFeeOp retrieves the SpendFeeOp value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationBody) GetSpendFeeOp() (result SpendFeeOp, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "SpendFeeOp" {
+		result = *u.SpendFeeOp
+		ok = true
+	}
+
+	return
+}
+
+// MustSetFeeOp retrieves the SetFeeOp value from the union,
+// panicing if the value is not set.
+func (u OperationBody) MustSetFeeOp() SetFeeOp {
+	val, ok := u.GetSetFeeOp()
+
+	if !ok {
+		panic("arm SetFeeOp is not set")
+	}
+
+	return val
+}
+
+// GetSetFeeOp retrieves the SetFeeOp value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationBody) GetSetFeeOp() (result SetFeeOp, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "SetFeeOp" {
+		result = *u.SetFeeOp
+		ok = true
+	}
+
+	return
+}
+
+// MustRestrictAccountOp retrieves the RestrictAccountOp value from the union,
+// panicing if the value is not set.
+func (u OperationBody) MustRestrictAccountOp() RestrictAccountOp {
+	val, ok := u.GetRestrictAccountOp()
+
+	if !ok {
+		panic("arm RestrictAccountOp is not set")
+	}
+
+	return val
+}
+
+// GetRestrictAccountOp retrieves the RestrictAccountOp value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationBody) GetRestrictAccountOp() (result RestrictAccountOp, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "RestrictAccountOp" {
+		result = *u.RestrictAccountOp
+		ok = true
+	}
+
+	return
+}
+
 // Operation is an XDR Struct defines as:
 //
 //   struct Operation
@@ -2593,6 +2762,12 @@ func (u OperationBody) GetSettlementOp() (result SettlementOp, ok bool) {
 //            EmissionOp emissionOp;
 //        case SETTLEMENT:
 //            SettlementOp settlementOp;
+//        case SPEND_FEE:
+//            SpendFeeOp spendFeeOp;
+//        case SET_FEE:
+//            SetFeeOp setFeeOp;
+//        case RESTRICT_ACCOUNT:
+//            RestrictAccountOp restrictAccountOp;
 //        }
 //        body;
 //    };
@@ -2651,7 +2826,7 @@ func (e MemoType) String() string {
 //    case MEMO_NONE:
 //        void;
 //    case MEMO_TEXT:
-//        string text<28>;
+//        string text<255>;
 //    case MEMO_ID:
 //        uint64 id;
 //    case MEMO_HASH:
@@ -2662,7 +2837,7 @@ func (e MemoType) String() string {
 //
 type Memo struct {
 	Type    MemoType
-	Text    *string `xdrmaxsize:"28"`
+	Text    *string `xdrmaxsize:"255"`
 	Id      *Uint64
 	Hash    *Hash
 	RetHash *Hash
@@ -4535,6 +4710,276 @@ func NewManageDataResult(code ManageDataResultCode, value interface{}) (result M
 	return
 }
 
+// SpendFeeResultCode is an XDR Enum defines as:
+//
+//   enum SpendFeeResultCode
+//    {
+//        // codes considered as "success" for the operation
+//        SPEND_FEE_SUCCESS = 0, // payment successfuly completed
+//
+//        // codes considered as "failure" for the operation
+//        SPEND_FEE_MALFORMED = -1,          // bad input
+//        SPEND_FEE_UNDERFUNDED = -2,        // not enough funds in the fee pool
+//        SPEND_FEE_SRC_NOT_AUTHORIZED = -3, // source not authorized to transfer
+//        SPEND_FEE_NO_DESTINATION = -4,     // destination account does not exist
+//        SPEND_FEE_SIGNER_NOT_AUTHORIZED = -5    // signer not authorized to sign such operation
+//    };
+//
+type SpendFeeResultCode int32
+
+const (
+	SpendFeeResultCodeSpendFeeSuccess             SpendFeeResultCode = 0
+	SpendFeeResultCodeSpendFeeMalformed           SpendFeeResultCode = -1
+	SpendFeeResultCodeSpendFeeUnderfunded         SpendFeeResultCode = -2
+	SpendFeeResultCodeSpendFeeSrcNotAuthorized    SpendFeeResultCode = -3
+	SpendFeeResultCodeSpendFeeNoDestination       SpendFeeResultCode = -4
+	SpendFeeResultCodeSpendFeeSignerNotAuthorized SpendFeeResultCode = -5
+)
+
+var spendFeeResultCodeMap = map[int32]string{
+	0:  "SpendFeeResultCodeSpendFeeSuccess",
+	-1: "SpendFeeResultCodeSpendFeeMalformed",
+	-2: "SpendFeeResultCodeSpendFeeUnderfunded",
+	-3: "SpendFeeResultCodeSpendFeeSrcNotAuthorized",
+	-4: "SpendFeeResultCodeSpendFeeNoDestination",
+	-5: "SpendFeeResultCodeSpendFeeSignerNotAuthorized",
+}
+
+// ValidEnum validates a proposed value for this enum.  Implements
+// the Enum interface for SpendFeeResultCode
+func (e SpendFeeResultCode) ValidEnum(v int32) bool {
+	_, ok := spendFeeResultCodeMap[v]
+	return ok
+}
+
+// String returns the name of `e`
+func (e SpendFeeResultCode) String() string {
+	name, _ := spendFeeResultCodeMap[int32(e)]
+	return name
+}
+
+// SpendFeeResult is an XDR Union defines as:
+//
+//   union SpendFeeResult switch (SpendFeeResultCode code)
+//    {
+//    case SPEND_FEE_SUCCESS:
+//        void;
+//    default:
+//        void;
+//    };
+//
+type SpendFeeResult struct {
+	Code SpendFeeResultCode
+}
+
+// SwitchFieldName returns the field name in which this union's
+// discriminant is stored
+func (u SpendFeeResult) SwitchFieldName() string {
+	return "Code"
+}
+
+// ArmForSwitch returns which field name should be used for storing
+// the value for an instance of SpendFeeResult
+func (u SpendFeeResult) ArmForSwitch(sw int32) (string, bool) {
+	switch SpendFeeResultCode(sw) {
+	case SpendFeeResultCodeSpendFeeSuccess:
+		return "", true
+	default:
+		return "", true
+	}
+}
+
+// NewSpendFeeResult creates a new  SpendFeeResult.
+func NewSpendFeeResult(code SpendFeeResultCode, value interface{}) (result SpendFeeResult, err error) {
+	result.Code = code
+	switch SpendFeeResultCode(code) {
+	case SpendFeeResultCodeSpendFeeSuccess:
+		// void
+	default:
+		// void
+	}
+	return
+}
+
+// SetFeeResultCode is an XDR Enum defines as:
+//
+//   enum SetFeeResultCode
+//    {
+//        // codes considered as "success" for the operation
+//        SET_FEE_SUCCESS = 0, // fee successfuly set
+//
+//        // codes considered as "failure" for the operation
+//        SET_FEE_MALFORMED = -1,          // bad input
+//        SET_FEE_SRC_NOT_AUTHORIZED = -2, // source not authorized to set fee
+//        SET_FEE_SIGNER_NOT_AUTHORIZED = -3    // signer not authorized to sign such operation
+//    };
+//
+type SetFeeResultCode int32
+
+const (
+	SetFeeResultCodeSetFeeSuccess             SetFeeResultCode = 0
+	SetFeeResultCodeSetFeeMalformed           SetFeeResultCode = -1
+	SetFeeResultCodeSetFeeSrcNotAuthorized    SetFeeResultCode = -2
+	SetFeeResultCodeSetFeeSignerNotAuthorized SetFeeResultCode = -3
+)
+
+var setFeeResultCodeMap = map[int32]string{
+	0:  "SetFeeResultCodeSetFeeSuccess",
+	-1: "SetFeeResultCodeSetFeeMalformed",
+	-2: "SetFeeResultCodeSetFeeSrcNotAuthorized",
+	-3: "SetFeeResultCodeSetFeeSignerNotAuthorized",
+}
+
+// ValidEnum validates a proposed value for this enum.  Implements
+// the Enum interface for SetFeeResultCode
+func (e SetFeeResultCode) ValidEnum(v int32) bool {
+	_, ok := setFeeResultCodeMap[v]
+	return ok
+}
+
+// String returns the name of `e`
+func (e SetFeeResultCode) String() string {
+	name, _ := setFeeResultCodeMap[int32(e)]
+	return name
+}
+
+// SetFeeResult is an XDR Union defines as:
+//
+//   union SetFeeResult switch (SetFeeResultCode code)
+//    {
+//    case SET_FEE_SUCCESS:
+//        void;
+//    default:
+//        void;
+//    };
+//
+type SetFeeResult struct {
+	Code SetFeeResultCode
+}
+
+// SwitchFieldName returns the field name in which this union's
+// discriminant is stored
+func (u SetFeeResult) SwitchFieldName() string {
+	return "Code"
+}
+
+// ArmForSwitch returns which field name should be used for storing
+// the value for an instance of SetFeeResult
+func (u SetFeeResult) ArmForSwitch(sw int32) (string, bool) {
+	switch SetFeeResultCode(sw) {
+	case SetFeeResultCodeSetFeeSuccess:
+		return "", true
+	default:
+		return "", true
+	}
+}
+
+// NewSetFeeResult creates a new  SetFeeResult.
+func NewSetFeeResult(code SetFeeResultCode, value interface{}) (result SetFeeResult, err error) {
+	result.Code = code
+	switch SetFeeResultCode(code) {
+	case SetFeeResultCodeSetFeeSuccess:
+		// void
+	default:
+		// void
+	}
+	return
+}
+
+// RestrictAccountResultCode is an XDR Enum defines as:
+//
+//   enum RestrictAccountResultCode
+//    {
+//        // codes considered as "success" for the operation
+//        RESTRICT_ACCOUNT_SUCCESS = 0, // fee successfuly set
+//
+//        // codes considered as "failure" for the operation
+//        RESTRICT_ACCOUNT_MALFORMED = -1,          // bad input
+//        RESTRICT_ACCOUNT_SRC_NOT_AUTHORIZED = -2, // source not authorized to create such operation
+//        RESTRICT_ACCOUNT_SIGNER_NOT_AUTHORIZED = -3,    // signer not authorized to sign such operation
+//        RESTRICT_ACCOUNT_BAD_FLAGS = -4,        // invalid combination of clear/set flags
+//        RESTRICT_ACCOUNT_UNKNOWN_FLAG = -5,        // can't set an unknown flag
+//        RESTRICT_ACCOUNT_NO_DESTINATION = -6
+//    };
+//
+type RestrictAccountResultCode int32
+
+const (
+	RestrictAccountResultCodeRestrictAccountSuccess             RestrictAccountResultCode = 0
+	RestrictAccountResultCodeRestrictAccountMalformed           RestrictAccountResultCode = -1
+	RestrictAccountResultCodeRestrictAccountSrcNotAuthorized    RestrictAccountResultCode = -2
+	RestrictAccountResultCodeRestrictAccountSignerNotAuthorized RestrictAccountResultCode = -3
+	RestrictAccountResultCodeRestrictAccountBadFlags            RestrictAccountResultCode = -4
+	RestrictAccountResultCodeRestrictAccountUnknownFlag         RestrictAccountResultCode = -5
+	RestrictAccountResultCodeRestrictAccountNoDestination       RestrictAccountResultCode = -6
+)
+
+var restrictAccountResultCodeMap = map[int32]string{
+	0:  "RestrictAccountResultCodeRestrictAccountSuccess",
+	-1: "RestrictAccountResultCodeRestrictAccountMalformed",
+	-2: "RestrictAccountResultCodeRestrictAccountSrcNotAuthorized",
+	-3: "RestrictAccountResultCodeRestrictAccountSignerNotAuthorized",
+	-4: "RestrictAccountResultCodeRestrictAccountBadFlags",
+	-5: "RestrictAccountResultCodeRestrictAccountUnknownFlag",
+	-6: "RestrictAccountResultCodeRestrictAccountNoDestination",
+}
+
+// ValidEnum validates a proposed value for this enum.  Implements
+// the Enum interface for RestrictAccountResultCode
+func (e RestrictAccountResultCode) ValidEnum(v int32) bool {
+	_, ok := restrictAccountResultCodeMap[v]
+	return ok
+}
+
+// String returns the name of `e`
+func (e RestrictAccountResultCode) String() string {
+	name, _ := restrictAccountResultCodeMap[int32(e)]
+	return name
+}
+
+// RestrictAccountResult is an XDR Union defines as:
+//
+//   union RestrictAccountResult switch (RestrictAccountResultCode code)
+//    {
+//    case RESTRICT_ACCOUNT_SUCCESS:
+//        void;
+//    default:
+//        void;
+//    };
+//
+type RestrictAccountResult struct {
+	Code RestrictAccountResultCode
+}
+
+// SwitchFieldName returns the field name in which this union's
+// discriminant is stored
+func (u RestrictAccountResult) SwitchFieldName() string {
+	return "Code"
+}
+
+// ArmForSwitch returns which field name should be used for storing
+// the value for an instance of RestrictAccountResult
+func (u RestrictAccountResult) ArmForSwitch(sw int32) (string, bool) {
+	switch RestrictAccountResultCode(sw) {
+	case RestrictAccountResultCodeRestrictAccountSuccess:
+		return "", true
+	default:
+		return "", true
+	}
+}
+
+// NewRestrictAccountResult creates a new  RestrictAccountResult.
+func NewRestrictAccountResult(code RestrictAccountResultCode, value interface{}) (result RestrictAccountResult, err error) {
+	result.Code = code
+	switch RestrictAccountResultCode(code) {
+	case RestrictAccountResultCodeRestrictAccountSuccess:
+		// void
+	default:
+		// void
+	}
+	return
+}
+
 // OperationResultCode is an XDR Enum defines as:
 //
 //   enum OperationResultCode
@@ -4602,6 +5047,12 @@ func (e OperationResultCode) String() string {
 //            EmissionResult emissionResult;
 //        case SETTLEMENT:
 //            SettlementResult settlementResult;
+//        case SPEND_FEE:
+//            SpendFeeResult spendFeeResult;
+//        case SET_FEE:
+//            SetFeeResult setFeeResult;
+//        case RESTRICT_ACCOUNT:
+//            RestrictAccountResult restrictAccountResult;
 //        }
 //
 type OperationResultTr struct {
@@ -4619,6 +5070,9 @@ type OperationResultTr struct {
 	ManageDataResult         *ManageDataResult
 	EmissionResult           *EmissionResult
 	SettlementResult         *SettlementResult
+	SpendFeeResult           *SpendFeeResult
+	SetFeeResult             *SetFeeResult
+	RestrictAccountResult    *RestrictAccountResult
 }
 
 // SwitchFieldName returns the field name in which this union's
@@ -4657,6 +5111,12 @@ func (u OperationResultTr) ArmForSwitch(sw int32) (string, bool) {
 		return "EmissionResult", true
 	case OperationTypeSettlement:
 		return "SettlementResult", true
+	case OperationTypeSpendFee:
+		return "SpendFeeResult", true
+	case OperationTypeSetFee:
+		return "SetFeeResult", true
+	case OperationTypeRestrictAccount:
+		return "RestrictAccountResult", true
 	}
 	return "-", false
 }
@@ -4756,6 +5216,27 @@ func NewOperationResultTr(aType OperationType, value interface{}) (result Operat
 			return
 		}
 		result.SettlementResult = &tv
+	case OperationTypeSpendFee:
+		tv, ok := value.(SpendFeeResult)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be SpendFeeResult")
+			return
+		}
+		result.SpendFeeResult = &tv
+	case OperationTypeSetFee:
+		tv, ok := value.(SetFeeResult)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be SetFeeResult")
+			return
+		}
+		result.SetFeeResult = &tv
+	case OperationTypeRestrictAccount:
+		tv, ok := value.(RestrictAccountResult)
+		if !ok {
+			err = fmt.Errorf("invalid value, must be RestrictAccountResult")
+			return
+		}
+		result.RestrictAccountResult = &tv
 	}
 	return
 }
@@ -5085,6 +5566,81 @@ func (u OperationResultTr) GetSettlementResult() (result SettlementResult, ok bo
 	return
 }
 
+// MustSpendFeeResult retrieves the SpendFeeResult value from the union,
+// panicing if the value is not set.
+func (u OperationResultTr) MustSpendFeeResult() SpendFeeResult {
+	val, ok := u.GetSpendFeeResult()
+
+	if !ok {
+		panic("arm SpendFeeResult is not set")
+	}
+
+	return val
+}
+
+// GetSpendFeeResult retrieves the SpendFeeResult value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationResultTr) GetSpendFeeResult() (result SpendFeeResult, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "SpendFeeResult" {
+		result = *u.SpendFeeResult
+		ok = true
+	}
+
+	return
+}
+
+// MustSetFeeResult retrieves the SetFeeResult value from the union,
+// panicing if the value is not set.
+func (u OperationResultTr) MustSetFeeResult() SetFeeResult {
+	val, ok := u.GetSetFeeResult()
+
+	if !ok {
+		panic("arm SetFeeResult is not set")
+	}
+
+	return val
+}
+
+// GetSetFeeResult retrieves the SetFeeResult value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationResultTr) GetSetFeeResult() (result SetFeeResult, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "SetFeeResult" {
+		result = *u.SetFeeResult
+		ok = true
+	}
+
+	return
+}
+
+// MustRestrictAccountResult retrieves the RestrictAccountResult value from the union,
+// panicing if the value is not set.
+func (u OperationResultTr) MustRestrictAccountResult() RestrictAccountResult {
+	val, ok := u.GetRestrictAccountResult()
+
+	if !ok {
+		panic("arm RestrictAccountResult is not set")
+	}
+
+	return val
+}
+
+// GetRestrictAccountResult retrieves the RestrictAccountResult value from the union,
+// returning ok if the union's switch indicated the value is valid.
+func (u OperationResultTr) GetRestrictAccountResult() (result RestrictAccountResult, ok bool) {
+	armName, _ := u.ArmForSwitch(int32(u.Type))
+
+	if armName == "RestrictAccountResult" {
+		result = *u.RestrictAccountResult
+		ok = true
+	}
+
+	return
+}
+
 // OperationResult is an XDR Union defines as:
 //
 //   union OperationResult switch (OperationResultCode code)
@@ -5118,6 +5674,12 @@ func (u OperationResultTr) GetSettlementResult() (result SettlementResult, ok bo
 //            EmissionResult emissionResult;
 //        case SETTLEMENT:
 //            SettlementResult settlementResult;
+//        case SPEND_FEE:
+//            SpendFeeResult spendFeeResult;
+//        case SET_FEE:
+//            SetFeeResult setFeeResult;
+//        case RESTRICT_ACCOUNT:
+//            RestrictAccountResult restrictAccountResult;
 //        }
 //        tr;
 //    default:

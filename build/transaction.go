@@ -175,6 +175,44 @@ func (m EmissionBuilder) MutateTransaction(o *TransactionBuilder) error {
 	return m.Err
 }
 
+// MutateTransaction for SetFeeBuilder causes the underylying
+// SetFeeOp to be added to the operation list for the provided
+// transaction
+func (m SetFeeBuilder) MutateTransaction(o *TransactionBuilder) error {
+	if m.Err != nil {
+		return m.Err
+	}
+
+	m.O.Body, m.Err = xdr.NewOperationBody(xdr.OperationTypeSetFee, m.E)
+	o.TX.Operations = append(o.TX.Operations, m.O)
+	return m.Err
+}
+
+// MutateTransaction for SpendFeeBuilder causes the underylying
+// SpendFeeOp to be added to the operation list for the provided
+// transaction
+func (m SpendFeeBuilder) MutateTransaction(o *TransactionBuilder) error {
+	if m.Err != nil {
+		return m.Err
+	}
+
+	m.O.Body, m.Err = xdr.NewOperationBody(xdr.OperationTypeSpendFee, m.E)
+	o.TX.Operations = append(o.TX.Operations, m.O)
+	return m.Err
+}
+
+// MutateTransaction for RestrictAccountBuilder causes the underylying
+// RestrictAccountOp to be added to the operation list for the provided
+// transaction
+func (m RestrictAccountBuilder) MutateTransaction(o *TransactionBuilder) error {
+	if m.Err != nil {
+		return m.Err
+	}
+
+	m.O.Body, m.Err = xdr.NewOperationBody(xdr.OperationTypeRestrictAccount, m.SO)
+	o.TX.Operations = append(o.TX.Operations, m.O)
+	return m.Err
+}
 
 // MutateTransaction for InflationBuilder causes the underylying
 // InflationOp to be added to the operation list for the provided
@@ -242,7 +280,7 @@ func (m MemoReturn) MutateTransaction(o *TransactionBuilder) (err error) {
 func (m MemoText) MutateTransaction(o *TransactionBuilder) (err error) {
 
 	if len([]byte(m.Value)) > MemoTextMaxLength {
-		err = errors.New("Memo too long; over 28 bytes")
+		err = errors.New("Memo too long; over 255 bytes")
 		return
 	}
 

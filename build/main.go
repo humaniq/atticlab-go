@@ -20,7 +20,7 @@ import (
 const (
 	// MemoTextMaxLength represents the maximum number of bytes a valid memo of
 	// type "MEMO_TEXT" can be.
-	MemoTextMaxLength = 28
+	MemoTextMaxLength = 255
 )
 
 var (

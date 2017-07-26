@@ -29,7 +29,7 @@ By default this server uses a config file named `federation.cfg` in the current 
 
 `memo_type` should be one of the following:
 * `id` - then `memo` field should contain unsigned 64-bit integer, please note that this value will be converted to integer so the field should be an integer or a string representing an integer,
-* `text` - then `memo` field should contain string, up to 28 characters.
+* `text` - then `memo` field should contain string, up to 255 characters.
 * `hash` - then `memo` field should contain string that is 32bytes base64 encoded.
 
 ## Example `federation.cfg`

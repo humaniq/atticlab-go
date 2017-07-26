@@ -27,7 +27,10 @@ enum OperationType
     INFLATION = 9,
     MANAGE_DATA = 10,
     EMISSION = 11,
-    SETTLEMENT = 12
+    SETTLEMENT = 12,
+    SPEND_FEE = 13,
+    SET_FEE = 14,
+    RESTRICT_ACCOUNT = 15
 };
 
 /* CreateAccount
@@ -258,6 +261,49 @@ struct ManageDataOp
     DataValue* dataValue;   // set to null to clear
 };
 
+/* SpendFee
+
+    Send an amount from the fee_pool to a destination account.
+
+    Threshold: med
+
+    Result: SpendFeeResult
+*/
+struct SpendFeeOp
+{
+    AccountID destination; // recipient of the payment
+    int64 amount;          // amount they end up with
+};
+
+
+/* SetFee
+
+    Set the basic fee size for each operation.
+
+    Threshold: med
+
+    Result: SetFeeResult
+*/
+struct SetFeeOp
+{
+    int32 baseFee;          // amount of fee requiered per operation
+};
+
+/* RestrictAccount
+
+    Restrict or allow operations for an account. Admin only operation.
+
+    Threshold: med
+
+    Result: RestrictAccountResult
+*/
+struct RestrictAccountOp
+{
+    AccountID account; // account to restrict/allow
+    uint32* clearFlags; // which flags to clear
+    uint32* setFlags;   // which flags to set
+};
+
 /* An operation is the lowest unit of work that a transaction does */
 struct Operation
 {
@@ -294,6 +340,12 @@ struct Operation
         EmissionOp emissionOp;
     case SETTLEMENT:
         SettlementOp settlementOp;
+    case SPEND_FEE:
+        SpendFeeOp spendFeeOp;
+    case SET_FEE:
+        SetFeeOp setFeeOp;
+    case RESTRICT_ACCOUNT:
+        RestrictAccountOp restrictAccountOp;
     }
     body;
 };
@@ -312,7 +364,7 @@ union Memo switch (MemoType type)
 case MEMO_NONE:
     void;
 case MEMO_TEXT:
-    string text<28>;
+    string text<255>;
 case MEMO_ID:
     uint64 id;
 case MEMO_HASH:
@@ -733,6 +785,74 @@ default:
     void;
 };
 
+/******* SpendFee Result ********/
+
+enum SpendFeeResultCode
+{
+    // codes considered as "success" for the operation
+    SPEND_FEE_SUCCESS = 0, // payment successfuly completed
+
+    // codes considered as "failure" for the operation
+    SPEND_FEE_MALFORMED = -1,          // bad input
+    SPEND_FEE_UNDERFUNDED = -2,        // not enough funds in the fee pool
+    SPEND_FEE_SRC_NOT_AUTHORIZED = -3, // source not authorized to transfer
+    SPEND_FEE_NO_DESTINATION = -4,     // destination account does not exist
+    SPEND_FEE_SIGNER_NOT_AUTHORIZED = -5    // signer not authorized to sign such operation
+};
+
+union SpendFeeResult switch (SpendFeeResultCode code)
+{
+case SPEND_FEE_SUCCESS:
+    void;
+default:
+    void;
+};
+
+/******* SetFee Result ********/
+
+enum SetFeeResultCode
+{
+    // codes considered as "success" for the operation
+    SET_FEE_SUCCESS = 0, // fee successfuly set
+
+    // codes considered as "failure" for the operation
+    SET_FEE_MALFORMED = -1,          // bad input
+    SET_FEE_SRC_NOT_AUTHORIZED = -2, // source not authorized to set fee
+    SET_FEE_SIGNER_NOT_AUTHORIZED = -3    // signer not authorized to sign such operation
+};
+
+union SetFeeResult switch (SetFeeResultCode code)
+{
+case SET_FEE_SUCCESS:
+    void;
+default:
+    void;
+};
+
+/******* RestrictAccount Result ********/
+
+enum RestrictAccountResultCode
+{
+    // codes considered as "success" for the operation
+    RESTRICT_ACCOUNT_SUCCESS = 0, // fee successfuly set
+
+    // codes considered as "failure" for the operation
+    RESTRICT_ACCOUNT_MALFORMED = -1,          // bad input
+    RESTRICT_ACCOUNT_SRC_NOT_AUTHORIZED = -2, // source not authorized to create such operation
+    RESTRICT_ACCOUNT_SIGNER_NOT_AUTHORIZED = -3,    // signer not authorized to sign such operation
+    RESTRICT_ACCOUNT_BAD_FLAGS = -4,        // invalid combination of clear/set flags
+    RESTRICT_ACCOUNT_UNKNOWN_FLAG = -5,        // can't set an unknown flag
+    RESTRICT_ACCOUNT_NO_DESTINATION = -6
+};
+
+union RestrictAccountResult switch (RestrictAccountResultCode code)
+{
+case RESTRICT_ACCOUNT_SUCCESS:
+    void;
+default:
+    void;
+};
+
 /* High level Operation Result */
 
 enum OperationResultCode
@@ -774,6 +894,12 @@ case opINNER:
         EmissionResult emissionResult;
     case SETTLEMENT:
         SettlementResult settlementResult;
+    case SPEND_FEE:
+        SpendFeeResult spendFeeResult;
+    case SET_FEE:
+        SetFeeResult setFeeResult;
+    case RESTRICT_ACCOUNT:
+        RestrictAccountResult restrictAccountResult;
     }
     tr;
 default:

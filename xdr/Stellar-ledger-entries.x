@@ -101,7 +101,13 @@ enum AccountFlags
     // otherwise, authorization cannot be revoked
     AUTH_REVOCABLE_FLAG = 0x2,
     // Once set, causes all AUTH_* flags to be read-only
-    AUTH_IMMUTABLE_FLAG = 0x4
+    AUTH_IMMUTABLE_FLAG = 0x4,
+    // Block all incoming payments.
+    // Can't be set or cleared by the user, but is rather set by administrators
+    BLOCK_INCOMING = 0x8,
+    // Block all outgoing payments.
+    // Can't be set or cleared by the user, but is rather set by administrators
+    BLOCK_OUTGOING = 0x10
 };
 
 /* AccountEntry

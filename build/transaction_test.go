@@ -61,8 +61,8 @@ var _ = Describe("Transaction Mutators:", func() {
 			Expect(subject.TX.Memo.MustText()).To(Equal("hello"))
 		})
 
-		Context("a string longer than 28 bytes", func() {
-			BeforeEach(func() { mut = MemoText{"12345678901234567890123456789"} })
+		Context("a string longer than 255 bytes", func() {
+			BeforeEach(func() { mut = MemoText{"1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456"} })
 			It("sets an error", func() {
 				Expect(subject.Err).ToNot(BeNil())
 			})
