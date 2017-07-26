@@ -104,3 +104,10 @@ func isFlagValidForRestrict(flag xdr.AccountFlags) bool {
 	}
 	return true
 }
+
+// MutateSpendFee for Destination sets the RestrictAccountOp's Account
+// field
+func (m Destination) MutateRestrictAccount(o *xdr.RestrictAccountOp) error {
+	return setAccountId(m.AddressOrSeed, &o.Account)
+}
+
