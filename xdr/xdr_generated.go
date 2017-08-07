@@ -3330,7 +3330,8 @@ func NewCreateAccountResult(code CreateAccountResultCode, value interface{}) (re
 //        EMISSION_MALFORMED = -1,          // bad input
 //        EMISSION_SRC_NOT_AUTHORIZED = -2, // source not authorized to create emission
 //        EMISSION_DEST_FULL = -3,      // destination would go above their limit
-//        EMISSION_TOTAL_EMISSION_FULL = -4      // the overflow will occur
+//        EMISSION_TOTAL_EMISSION_FULL = -4,      // the overflow will occur
+//        EMISSION_DEST_BLOCKED = -5     // destination is blocked from recieving actions
 //    };
 //
 type EmissionResultCode int32
@@ -3341,6 +3342,7 @@ const (
 	EmissionResultCodeEmissionSrcNotAuthorized  EmissionResultCode = -2
 	EmissionResultCodeEmissionDestFull          EmissionResultCode = -3
 	EmissionResultCodeEmissionTotalEmissionFull EmissionResultCode = -4
+	EmissionResultCodeEmissionDestBlocked       EmissionResultCode = -5
 )
 
 var emissionResultCodeMap = map[int32]string{
@@ -3349,6 +3351,7 @@ var emissionResultCodeMap = map[int32]string{
 	-2: "EmissionResultCodeEmissionSrcNotAuthorized",
 	-3: "EmissionResultCodeEmissionDestFull",
 	-4: "EmissionResultCodeEmissionTotalEmissionFull",
+	-5: "EmissionResultCodeEmissionDestBlocked",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -3508,7 +3511,8 @@ func NewSettlementResult(code SettlementResultCode, value interface{}) (result S
 //        PAYMENT_NO_TRUST = -6,       // destination missing a trust line for asset
 //        PAYMENT_NOT_AUTHORIZED = -7, // destination not authorized to hold asset
 //        PAYMENT_LINE_FULL = -8,      // destination would go above their limit
-//        PAYMENT_NO_ISSUER = -9       // missing issuer on asset
+//        PAYMENT_NO_ISSUER = -9,       // missing issuer on asset
+//        PAYMENT_DEST_BLOCKED = -10     // destination is blocked from recieving actions
 //    };
 //
 type PaymentResultCode int32
@@ -3524,19 +3528,21 @@ const (
 	PaymentResultCodePaymentNotAuthorized    PaymentResultCode = -7
 	PaymentResultCodePaymentLineFull         PaymentResultCode = -8
 	PaymentResultCodePaymentNoIssuer         PaymentResultCode = -9
+	PaymentResultCodePaymentDestBlocked      PaymentResultCode = -10
 )
 
 var paymentResultCodeMap = map[int32]string{
-	0:  "PaymentResultCodePaymentSuccess",
-	-1: "PaymentResultCodePaymentMalformed",
-	-2: "PaymentResultCodePaymentUnderfunded",
-	-3: "PaymentResultCodePaymentSrcNoTrust",
-	-4: "PaymentResultCodePaymentSrcNotAuthorized",
-	-5: "PaymentResultCodePaymentNoDestination",
-	-6: "PaymentResultCodePaymentNoTrust",
-	-7: "PaymentResultCodePaymentNotAuthorized",
-	-8: "PaymentResultCodePaymentLineFull",
-	-9: "PaymentResultCodePaymentNoIssuer",
+	0:   "PaymentResultCodePaymentSuccess",
+	-1:  "PaymentResultCodePaymentMalformed",
+	-2:  "PaymentResultCodePaymentUnderfunded",
+	-3:  "PaymentResultCodePaymentSrcNoTrust",
+	-4:  "PaymentResultCodePaymentSrcNotAuthorized",
+	-5:  "PaymentResultCodePaymentNoDestination",
+	-6:  "PaymentResultCodePaymentNoTrust",
+	-7:  "PaymentResultCodePaymentNotAuthorized",
+	-8:  "PaymentResultCodePaymentLineFull",
+	-9:  "PaymentResultCodePaymentNoIssuer",
+	-10: "PaymentResultCodePaymentDestBlocked",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -3614,7 +3620,8 @@ func NewPaymentResult(code PaymentResultCode, value interface{}) (result Payment
 //        PATH_PAYMENT_NO_ISSUER = -9,          // missing issuer on one asset
 //        PATH_PAYMENT_TOO_FEW_OFFERS = -10,    // not enough offers to satisfy path
 //        PATH_PAYMENT_OFFER_CROSS_SELF = -11,  // would cross one of its own offers
-//        PATH_PAYMENT_OVER_SENDMAX = -12       // could not satisfy sendmax
+//        PATH_PAYMENT_OVER_SENDMAX = -12,       // could not satisfy sendmax
+//        PATH_PAYMENT_DEST_BLOCKED = -13     // destination is blocked from recieving actions
 //    };
 //
 type PathPaymentResultCode int32
@@ -3633,6 +3640,7 @@ const (
 	PathPaymentResultCodePathPaymentTooFewOffers     PathPaymentResultCode = -10
 	PathPaymentResultCodePathPaymentOfferCrossSelf   PathPaymentResultCode = -11
 	PathPaymentResultCodePathPaymentOverSendmax      PathPaymentResultCode = -12
+	PathPaymentResultCodePathPaymentDestBlocked      PathPaymentResultCode = -13
 )
 
 var pathPaymentResultCodeMap = map[int32]string{
@@ -3649,6 +3657,7 @@ var pathPaymentResultCodeMap = map[int32]string{
 	-10: "PathPaymentResultCodePathPaymentTooFewOffers",
 	-11: "PathPaymentResultCodePathPaymentOfferCrossSelf",
 	-12: "PathPaymentResultCodePathPaymentOverSendmax",
+	-13: "PathPaymentResultCodePathPaymentDestBlocked",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -4393,7 +4402,8 @@ func NewAllowTrustResult(code AllowTrustResultCode, value interface{}) (result A
 //        ACCOUNT_MERGE_MALFORMED = -1,      // can't merge onto itself
 //        ACCOUNT_MERGE_NO_ACCOUNT = -2,     // destination does not exist
 //        ACCOUNT_MERGE_IMMUTABLE_SET = -3,  // source account has AUTH_IMMUTABLE set
-//        ACCOUNT_MERGE_HAS_SUB_ENTRIES = -4 // account has trust lines/offers
+//        ACCOUNT_MERGE_HAS_SUB_ENTRIES = -4, // account has trust lines/offers
+//        ACCOUNT_MERGE_DEST_BLOCKED = -5     // destination is blocked from recieving actions
 //    };
 //
 type AccountMergeResultCode int32
@@ -4404,6 +4414,7 @@ const (
 	AccountMergeResultCodeAccountMergeNoAccount     AccountMergeResultCode = -2
 	AccountMergeResultCodeAccountMergeImmutableSet  AccountMergeResultCode = -3
 	AccountMergeResultCodeAccountMergeHasSubEntries AccountMergeResultCode = -4
+	AccountMergeResultCodeAccountMergeDestBlocked   AccountMergeResultCode = -5
 )
 
 var accountMergeResultCodeMap = map[int32]string{
@@ -4412,6 +4423,7 @@ var accountMergeResultCodeMap = map[int32]string{
 	-2: "AccountMergeResultCodeAccountMergeNoAccount",
 	-3: "AccountMergeResultCodeAccountMergeImmutableSet",
 	-4: "AccountMergeResultCodeAccountMergeHasSubEntries",
+	-5: "AccountMergeResultCodeAccountMergeDestBlocked",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -4722,7 +4734,8 @@ func NewManageDataResult(code ManageDataResultCode, value interface{}) (result M
 //        SPEND_FEE_UNDERFUNDED = -2,        // not enough funds in the fee pool
 //        SPEND_FEE_SRC_NOT_AUTHORIZED = -3, // source not authorized to transfer
 //        SPEND_FEE_NO_DESTINATION = -4,     // destination account does not exist
-//        SPEND_FEE_SIGNER_NOT_AUTHORIZED = -5    // signer not authorized to sign such operation
+//        SPEND_FEE_SIGNER_NOT_AUTHORIZED = -5,    // signer not authorized to sign such operation
+//        SPEND_FEE_DEST_BLOCKED = -6     // destination is blocked from recieving actions
 //    };
 //
 type SpendFeeResultCode int32
@@ -4734,6 +4747,7 @@ const (
 	SpendFeeResultCodeSpendFeeSrcNotAuthorized    SpendFeeResultCode = -3
 	SpendFeeResultCodeSpendFeeNoDestination       SpendFeeResultCode = -4
 	SpendFeeResultCodeSpendFeeSignerNotAuthorized SpendFeeResultCode = -5
+	SpendFeeResultCodeSpendFeeDestBlocked         SpendFeeResultCode = -6
 )
 
 var spendFeeResultCodeMap = map[int32]string{
@@ -4743,6 +4757,7 @@ var spendFeeResultCodeMap = map[int32]string{
 	-3: "SpendFeeResultCodeSpendFeeSrcNotAuthorized",
 	-4: "SpendFeeResultCodeSpendFeeNoDestination",
 	-5: "SpendFeeResultCodeSpendFeeSignerNotAuthorized",
+	-6: "SpendFeeResultCodeSpendFeeDestBlocked",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -4987,21 +5002,24 @@ func NewRestrictAccountResult(code RestrictAccountResultCode, value interface{})
 //        opINNER = 0, // inner object result is valid
 //
 //        opBAD_AUTH = -1,  // too few valid signatures / wrong network
-//        opNO_ACCOUNT = -2 // source account was not found
+//        opNO_ACCOUNT = -2, // source account was not found
+//        opACCOUNT_BLOCKED_OUT = -3 // source account was blocked for outgoing actions
 //    };
 //
 type OperationResultCode int32
 
 const (
-	OperationResultCodeOpInner     OperationResultCode = 0
-	OperationResultCodeOpBadAuth   OperationResultCode = -1
-	OperationResultCodeOpNoAccount OperationResultCode = -2
+	OperationResultCodeOpInner             OperationResultCode = 0
+	OperationResultCodeOpBadAuth           OperationResultCode = -1
+	OperationResultCodeOpNoAccount         OperationResultCode = -2
+	OperationResultCodeOpAccountBlockedOut OperationResultCode = -3
 )
 
 var operationResultCodeMap = map[int32]string{
 	0:  "OperationResultCodeOpInner",
 	-1: "OperationResultCodeOpBadAuth",
 	-2: "OperationResultCodeOpNoAccount",
+	-3: "OperationResultCodeOpAccountBlockedOut",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements
@@ -5768,7 +5786,8 @@ func (u OperationResult) GetTr() (result OperationResultTr, ok bool) {
 //        txNO_ACCOUNT = -8,           // source account not found
 //        txINSUFFICIENT_FEE = -9,     // fee is too small
 //        txBAD_AUTH_EXTRA = -10,      // unused signatures attached to transaction
-//        txINTERNAL_ERROR = -11       // an unknown error occured
+//        txACCOUNT_BLOCKED_OUT = -11,    // source account is blocked from out actions
+//        txINTERNAL_ERROR = -12       // an unknown error occured
 //    };
 //
 type TransactionResultCode int32
@@ -5785,7 +5804,8 @@ const (
 	TransactionResultCodeTxNoAccount           TransactionResultCode = -8
 	TransactionResultCodeTxInsufficientFee     TransactionResultCode = -9
 	TransactionResultCodeTxBadAuthExtra        TransactionResultCode = -10
-	TransactionResultCodeTxInternalError       TransactionResultCode = -11
+	TransactionResultCodeTxAccountBlockedOut   TransactionResultCode = -11
+	TransactionResultCodeTxInternalError       TransactionResultCode = -12
 )
 
 var transactionResultCodeMap = map[int32]string{
@@ -5800,7 +5820,8 @@ var transactionResultCodeMap = map[int32]string{
 	-8:  "TransactionResultCodeTxNoAccount",
 	-9:  "TransactionResultCodeTxInsufficientFee",
 	-10: "TransactionResultCodeTxBadAuthExtra",
-	-11: "TransactionResultCodeTxInternalError",
+	-11: "TransactionResultCodeTxAccountBlockedOut",
+	-12: "TransactionResultCodeTxInternalError",
 }
 
 // ValidEnum validates a proposed value for this enum.  Implements

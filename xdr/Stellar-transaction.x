@@ -488,7 +488,8 @@ enum EmissionResultCode
     EMISSION_MALFORMED = -1,          // bad input
     EMISSION_SRC_NOT_AUTHORIZED = -2, // source not authorized to create emission
     EMISSION_DEST_FULL = -3,      // destination would go above their limit
-    EMISSION_TOTAL_EMISSION_FULL = -4      // the overflow will occur
+    EMISSION_TOTAL_EMISSION_FULL = -4,      // the overflow will occur
+    EMISSION_DEST_BLOCKED = -5     // destination is blocked from recieving actions
 };
 
 union EmissionResult switch (EmissionResultCode code)
@@ -536,7 +537,8 @@ enum PaymentResultCode
     PAYMENT_NO_TRUST = -6,       // destination missing a trust line for asset
     PAYMENT_NOT_AUTHORIZED = -7, // destination not authorized to hold asset
     PAYMENT_LINE_FULL = -8,      // destination would go above their limit
-    PAYMENT_NO_ISSUER = -9       // missing issuer on asset
+    PAYMENT_NO_ISSUER = -9,       // missing issuer on asset
+    PAYMENT_DEST_BLOCKED = -10     // destination is blocked from recieving actions
 };
 
 union PaymentResult switch (PaymentResultCode code)
@@ -566,7 +568,8 @@ enum PathPaymentResultCode
     PATH_PAYMENT_NO_ISSUER = -9,          // missing issuer on one asset
     PATH_PAYMENT_TOO_FEW_OFFERS = -10,    // not enough offers to satisfy path
     PATH_PAYMENT_OFFER_CROSS_SELF = -11,  // would cross one of its own offers
-    PATH_PAYMENT_OVER_SENDMAX = -12       // could not satisfy sendmax
+    PATH_PAYMENT_OVER_SENDMAX = -12,       // could not satisfy sendmax
+    PATH_PAYMENT_DEST_BLOCKED = -13     // destination is blocked from recieving actions
 };
 
 struct SimplePaymentResult
@@ -729,7 +732,8 @@ enum AccountMergeResultCode
     ACCOUNT_MERGE_MALFORMED = -1,      // can't merge onto itself
     ACCOUNT_MERGE_NO_ACCOUNT = -2,     // destination does not exist
     ACCOUNT_MERGE_IMMUTABLE_SET = -3,  // source account has AUTH_IMMUTABLE set
-    ACCOUNT_MERGE_HAS_SUB_ENTRIES = -4 // account has trust lines/offers
+    ACCOUNT_MERGE_HAS_SUB_ENTRIES = -4, // account has trust lines/offers
+    ACCOUNT_MERGE_DEST_BLOCKED = -5     // destination is blocked from recieving actions
 };
 
 union AccountMergeResult switch (AccountMergeResultCode code)
@@ -797,7 +801,8 @@ enum SpendFeeResultCode
     SPEND_FEE_UNDERFUNDED = -2,        // not enough funds in the fee pool
     SPEND_FEE_SRC_NOT_AUTHORIZED = -3, // source not authorized to transfer
     SPEND_FEE_NO_DESTINATION = -4,     // destination account does not exist
-    SPEND_FEE_SIGNER_NOT_AUTHORIZED = -5    // signer not authorized to sign such operation
+    SPEND_FEE_SIGNER_NOT_AUTHORIZED = -5,    // signer not authorized to sign such operation
+    SPEND_FEE_DEST_BLOCKED = -6     // destination is blocked from recieving actions
 };
 
 union SpendFeeResult switch (SpendFeeResultCode code)
@@ -860,7 +865,8 @@ enum OperationResultCode
     opINNER = 0, // inner object result is valid
 
     opBAD_AUTH = -1,  // too few valid signatures / wrong network
-    opNO_ACCOUNT = -2 // source account was not found
+    opNO_ACCOUNT = -2, // source account was not found
+    opACCOUNT_BLOCKED_OUT = -3 // source account was blocked for outgoing actions
 };
 
 union OperationResult switch (OperationResultCode code)
@@ -922,7 +928,8 @@ enum TransactionResultCode
     txNO_ACCOUNT = -8,           // source account not found
     txINSUFFICIENT_FEE = -9,     // fee is too small
     txBAD_AUTH_EXTRA = -10,      // unused signatures attached to transaction
-    txINTERNAL_ERROR = -11       // an unknown error occured
+    txACCOUNT_BLOCKED_OUT = -11,    // source account is blocked from out actions
+    txINTERNAL_ERROR = -12       // an unknown error occured
 };
 
 struct TransactionResult
