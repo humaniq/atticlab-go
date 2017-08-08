@@ -9,8 +9,8 @@ import (
 	"net/url"
 	"strconv"
 
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/xdr"
 	"golang.org/x/net/context"
 )
 

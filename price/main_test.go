@@ -3,8 +3,8 @@ package price_test
 import (
 	"testing"
 
-	"bitbucket.attic.pw/hum/go/price"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/price"
+	"github.com/humaniq/go/xdr"
 )
 
 var Tests = []struct {

@@ -3,8 +3,8 @@ package federation
 import (
 	"net/http"
 
-	"bitbucket.attic.pw/hum/go/clients/horizon"
-	"bitbucket.attic.pw/hum/go/clients/stellartoml"
+	"github.com/humaniq/go/clients/horizon"
+	"github.com/humaniq/go/clients/stellartoml"
 )
 
 // FederationResponseMaxSize is the maximum size of response from a federation server

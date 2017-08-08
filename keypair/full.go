@@ -4,8 +4,8 @@ import (
 	"bytes"
 
 	"github.com/agl/ed25519"
-	"bitbucket.attic.pw/hum/go/strkey"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/strkey"
+	"github.com/humaniq/go/xdr"
 )
 
 type Full struct {

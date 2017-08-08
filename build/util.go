@@ -1,9 +1,9 @@
 package build
 
 import (
-	"bitbucket.attic.pw/hum/go/keypair"
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/keypair"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/xdr"
 )
 
 func setAccountId(addressOrSeed string, aid *xdr.AccountId) error {

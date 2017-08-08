@@ -1,10 +1,10 @@
 package build
 
 import (
-	"bitbucket.attic.pw/hum/go/amount"
-	"bitbucket.attic.pw/hum/go/price"
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/amount"
+	"github.com/humaniq/go/price"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/xdr"
 )
 
 // CreateOffer creates a new offer

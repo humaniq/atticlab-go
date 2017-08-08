@@ -11,10 +11,10 @@ package build
 import (
 	"math"
 
-	"bitbucket.attic.pw/hum/go/amount"
-	"bitbucket.attic.pw/hum/go/network"
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/amount"
+	"github.com/humaniq/go/network"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/xdr"
 )
 
 const (

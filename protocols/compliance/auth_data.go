@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 
 	"github.com/asaskevich/govalidator"
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/xdr"
 )
 
 // Marshal marshals Attachment

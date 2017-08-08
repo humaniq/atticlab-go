@@ -12,8 +12,8 @@ import (
 
 	"time"
 
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/support/log"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/support/log"
 )
 
 var extractBinName = regexp.MustCompile(`^(?P<bin>[a-z-]+)-(?P<tag>.+)$`)
@@ -32,7 +32,7 @@ func main() {
 	log.SetLevel(log.InfoLevel)
 	bin, version := extractFromTag(os.Getenv("TRAVIS_TAG"))
 	pkg := packageName(bin)
-	repo := "bitbucket.attic.pw/hum/go"
+	repo := "github.com/humaniq/go"
 
 	if os.Getenv("REPO") != "" {
 		repo = os.Getenv("REPO")
@@ -72,8 +72,8 @@ func main() {
 func build(pkg, dest, version, buildOS, buildArch string) {
 	buildTime := time.Now().Format(time.RFC3339)
 
-	timeFlag := fmt.Sprintf("-X bitbucket.attic.pw/hum/go/support/app.buildTime=%s", buildTime)
-	versionFlag := fmt.Sprintf("-X bitbucket.attic.pw/hum/go/support/app.version=%s", version)
+	timeFlag := fmt.Sprintf("-X github.com/humaniq/go/support/app.buildTime=%s", buildTime)
+	versionFlag := fmt.Sprintf("-X github.com/humaniq/go/support/app.version=%s", version)
 
 	if buildOS == "windows" {
 		dest = dest + ".exe"

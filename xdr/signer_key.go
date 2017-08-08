@@ -3,8 +3,8 @@ package xdr
 import (
 	"fmt"
 
-	"bitbucket.attic.pw/hum/go/strkey"
-	"bitbucket.attic.pw/hum/go/support/errors"
+	"github.com/humaniq/go/strkey"
+	"github.com/humaniq/go/support/errors"
 )
 
 // Address returns the strkey encoded form of this signer key.  This method will

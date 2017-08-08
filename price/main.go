@@ -10,7 +10,7 @@ import (
 	"math"
 	"math/big"
 
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/xdr"
 )
 
 // Parse  calculates and returns the best rational approximation of the given

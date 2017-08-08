@@ -8,7 +8,7 @@ import (
 	"regexp"
 
 	"github.com/manucorporat/sse"
-	"bitbucket.attic.pw/hum/go/support/errors"
+	"github.com/humaniq/go/support/errors"
 )
 
 var endEvent = regexp.MustCompile("(\r\n|\r|\n){2}")

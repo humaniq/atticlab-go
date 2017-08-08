@@ -1,6 +1,6 @@
 package federation
 
-import "bitbucket.attic.pw/hum/go/support/errors"
+import "github.com/humaniq/go/support/errors"
 
 // LookupReverseRecord implements `ReverseDriver` by performing
 // `drv.LookupReverseRecordQuery` against `drv.DB` using the provided parameter

@@ -14,7 +14,7 @@ import (
 	"log"
 	"sort"
 
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/xdr"
 )
 
 // Transaction sets are sorted in two different orders: one for hashing and

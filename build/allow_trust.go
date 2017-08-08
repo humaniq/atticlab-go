@@ -1,8 +1,8 @@
 package build
 
 import (
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/xdr"
 )
 
 // AllowTrust groups the creation of a new AllowTrustBuilder with a call to Mutate.

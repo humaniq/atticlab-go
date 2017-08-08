@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/asaskevich/govalidator"
-	"bitbucket.attic.pw/hum/go/support/errors"
+	"github.com/humaniq/go/support/errors"
 )
 
 // Separator seperates the name and domain portions of an address

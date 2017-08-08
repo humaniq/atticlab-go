@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math"
 
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/xdr"
 )
 
 // ErrMetaNotFound is returned when no meta that matches a provided filter can

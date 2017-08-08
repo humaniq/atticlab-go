@@ -5,9 +5,9 @@ import (
 	"errors"
 	"io"
 
-	"bitbucket.attic.pw/hum/go/network"
-	"bitbucket.attic.pw/hum/go/strkey"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/network"
+	"github.com/humaniq/go/strkey"
+	"github.com/humaniq/go/xdr"
 )
 
 var (

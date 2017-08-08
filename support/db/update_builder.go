@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 
-	"bitbucket.attic.pw/hum/go/support/errors"
+	"github.com/humaniq/go/support/errors"
 )
 
 // Exec executes the query that has been previously configured on the

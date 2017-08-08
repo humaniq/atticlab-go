@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"testing"
 
-	"bitbucket.attic.pw/hum/go/support/errors"
+	"github.com/humaniq/go/support/errors"
 )
 
 // DB represents an ephemeral database that can be starts blank and can be used

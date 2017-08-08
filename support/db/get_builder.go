@@ -1,7 +1,7 @@
 package db
 
 import (
-	"bitbucket.attic.pw/hum/go/support/errors"
+	"github.com/humaniq/go/support/errors"
 )
 
 // Exec executes the query represented by the builder, populating the

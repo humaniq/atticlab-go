@@ -7,9 +7,9 @@ import (
 	"net/url"
 	"strings"
 
-	"bitbucket.attic.pw/hum/go/address"
-	proto "bitbucket.attic.pw/hum/go/protocols/federation"
-	"bitbucket.attic.pw/hum/go/support/errors"
+	"github.com/humaniq/go/address"
+	proto "github.com/humaniq/go/protocols/federation"
+	"github.com/humaniq/go/support/errors"
 )
 
 // LookupByAddress performs a federated lookup following to the stellar

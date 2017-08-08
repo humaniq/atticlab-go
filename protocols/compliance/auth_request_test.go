@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"testing"
 
-	"bitbucket.attic.pw/hum/go/build"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/build"
+	"github.com/humaniq/go/xdr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

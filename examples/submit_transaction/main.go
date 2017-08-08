@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"bitbucket.attic.pw/hum/go/clients/horizon"
+	"github.com/humaniq/go/clients/horizon"
 )
 
 func main() {

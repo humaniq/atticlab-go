@@ -7,9 +7,9 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
-	"bitbucket.attic.pw/hum/go/address"
-	proto "bitbucket.attic.pw/hum/go/protocols/federation"
-	"bitbucket.attic.pw/hum/go/support/log"
+	"github.com/humaniq/go/address"
+	proto "github.com/humaniq/go/protocols/federation"
+	"github.com/humaniq/go/support/log"
 )
 
 func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

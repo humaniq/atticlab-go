@@ -7,9 +7,9 @@ import (
 	"net/url"
 
 	"github.com/asaskevich/govalidator"
-	"bitbucket.attic.pw/hum/go/clients/stellartoml"
-	"bitbucket.attic.pw/hum/go/keypair"
-	"bitbucket.attic.pw/hum/go/support/errors"
+	"github.com/humaniq/go/clients/stellartoml"
+	"github.com/humaniq/go/keypair"
+	"github.com/humaniq/go/support/errors"
 )
 
 func (r *AuthRequest) Populate(request *http.Request) *AuthRequest {

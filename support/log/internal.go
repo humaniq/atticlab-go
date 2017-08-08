@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	"bitbucket.attic.pw/hum/go/support/http/mutil"
+	"github.com/humaniq/go/support/http/mutil"
 	"golang.org/x/net/context"
 )
 

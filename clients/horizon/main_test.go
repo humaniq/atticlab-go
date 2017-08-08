@@ -7,8 +7,8 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/support/http/httptest"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/support/http/httptest"
 	"golang.org/x/net/context"
 )
 
@@ -35,7 +35,7 @@ func ExampleStream() {
 
 func TestHorizon(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Package: bitbucket.attic.pw/hum/go/horizon")
+	RunSpecs(t, "Package: github.com/humaniq/go/horizon")
 }
 
 var _ = Describe("Horizon", func() {

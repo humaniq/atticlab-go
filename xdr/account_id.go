@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"bitbucket.attic.pw/hum/go/strkey"
+	"github.com/humaniq/go/strkey"
 )
 
 // Address returns the strkey encoded form of this AccountId.  This method will

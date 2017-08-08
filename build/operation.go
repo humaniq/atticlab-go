@@ -1,7 +1,7 @@
 package build
 
 import (
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/xdr"
 )
 
 // OperationMutator is a interface that wraps the MutateOperation operation.

@@ -1,7 +1,7 @@
 package xdr_test
 
 import (
-	. "bitbucket.attic.pw/hum/go/xdr"
+	. "github.com/humaniq/go/xdr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"

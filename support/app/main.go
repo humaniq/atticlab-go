@@ -3,7 +3,7 @@
 package app
 
 import "time"
-import "bitbucket.attic.pw/hum/go/support/errors"
+import "github.com/humaniq/go/support/errors"
 
 var (
 	// ErrNoBuildTime is the error returned when no build time for the current

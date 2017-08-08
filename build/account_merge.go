@@ -1,8 +1,8 @@
 package build
 
 import (
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/xdr"
 )
 
 // AccountMerge groups the creation of a new AccountMergeBuilder with a call to

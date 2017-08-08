@@ -3,7 +3,7 @@ package build
 import (
 	"fmt"
 
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/xdr"
 )
 
 // MockSequenceProvider is a mock sequence provider.

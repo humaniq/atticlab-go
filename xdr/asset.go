@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"bitbucket.attic.pw/hum/go/strkey"
+	"github.com/humaniq/go/strkey"
 )
 
 // This file contains helpers for working with xdr.Asset structs

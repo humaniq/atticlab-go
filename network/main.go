@@ -8,9 +8,9 @@ import (
 
 	"strings"
 
-	"bitbucket.attic.pw/hum/go/hash"
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/hash"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/xdr"
 )
 
 const (

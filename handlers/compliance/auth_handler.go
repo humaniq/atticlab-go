@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"net/http"
 
-	complianceProtocol "bitbucket.attic.pw/hum/go/protocols/compliance"
-	"bitbucket.attic.pw/hum/go/support/errors"
-	"bitbucket.attic.pw/hum/go/support/log"
+	complianceProtocol "github.com/humaniq/go/protocols/compliance"
+	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/go/support/log"
 )
 
 func (h *AuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

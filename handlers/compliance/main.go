@@ -1,7 +1,7 @@
 package compliance
 
 import (
-	"bitbucket.attic.pw/hum/go/protocols/compliance"
+	"github.com/humaniq/go/protocols/compliance"
 )
 
 // Strategy defines strategy for handling auth requests.

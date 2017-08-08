@@ -1,7 +1,7 @@
 package federation
 
-import "bitbucket.attic.pw/hum/go/support/db"
-import "bitbucket.attic.pw/hum/go/support/errors"
+import "github.com/humaniq/go/support/db"
+import "github.com/humaniq/go/support/errors"
 
 // LookupRecord implements `Driver` by performing `drv.LookupRecordQuery`
 // against `drv.DB` using the provided parameters

@@ -2,8 +2,8 @@ package keypair
 
 import (
 	"github.com/agl/ed25519"
-	"bitbucket.attic.pw/hum/go/strkey"
-	"bitbucket.attic.pw/hum/go/xdr"
+	"github.com/humaniq/go/strkey"
+	"github.com/humaniq/go/xdr"
 )
 
 // FromAddress represents a keypair to which only the address is know.  This KP
