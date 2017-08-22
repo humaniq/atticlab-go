@@ -183,9 +183,8 @@ func (m SetFeeBuilder) MutateTransaction(o *TransactionBuilder) error {
 		return m.Err
 	}
 
-	m.O.Body, m.Err = xdr.NewOperationBody(xdr.OperationTypeSetFee, m.E)
-	o.TX.Operations = append(o.TX.Operations, m.O)
-	return m.Err
+	o.TX.Fee = xdr.Uint32(m.E.BaseFee)
+	return nil
 }
 
 // MutateTransaction for SpendFeeBuilder causes the underylying
