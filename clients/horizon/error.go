@@ -3,8 +3,8 @@ package horizon
 import (
 	"encoding/json"
 
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 func (herr *Error) Error() string {

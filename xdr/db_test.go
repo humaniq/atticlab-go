@@ -3,7 +3,7 @@ package xdr_test
 import (
 	"database/sql"
 
-	. "github.com/humaniq/go/xdr"
+	. "github.com/humaniq/atticlab-go/xdr"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/ginkgo/extensions/table"

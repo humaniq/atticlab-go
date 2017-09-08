@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/humaniq/go/strkey"
+	"github.com/humaniq/atticlab-go/strkey"
 )
 
 // Address returns the strkey encoded form of this AccountId.  This method will

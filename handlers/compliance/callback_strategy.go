@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/url"
 
-	proto "github.com/humaniq/go/protocols/compliance"
-	"github.com/humaniq/go/support/errors"
+	proto "github.com/humaniq/atticlab-go/protocols/compliance"
+	"github.com/humaniq/atticlab-go/support/errors"
 )
 
 type pendingResponse struct {

@@ -8,8 +8,8 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/asaskevich/govalidator"
-	"github.com/humaniq/go/strkey"
-	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/atticlab-go/strkey"
+	"github.com/humaniq/atticlab-go/support/errors"
 )
 
 // InvalidConfigError is the error that is returned when an invalid

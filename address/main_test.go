@@ -3,7 +3,7 @@ package address
 import (
 	"testing"
 
-	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/atticlab-go/support/errors"
 	"github.com/stretchr/testify/assert"
 )
 

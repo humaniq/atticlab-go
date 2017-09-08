@@ -2,7 +2,7 @@
 // stellar-core while processing transactions.
 package meta
 
-import "github.com/humaniq/go/xdr"
+import "github.com/humaniq/atticlab-go/xdr"
 
 // Bundle represents all of the metadata emitted from the application of a single
 // stellar transaction; Both fee meta and result meta is included.

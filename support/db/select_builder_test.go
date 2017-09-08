@@ -3,7 +3,7 @@ package db
 import (
 	"testing"
 
-	"github.com/humaniq/go/support/db/dbtest"
+	"github.com/humaniq/atticlab-go/support/db/dbtest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

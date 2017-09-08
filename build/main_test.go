@@ -6,12 +6,12 @@ import (
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 func TestBuild(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Package: github.com/humaniq/go/build")
+	RunSpecs(t, "Package: github.com/humaniq/atticlab-go/build")
 }
 
 // ExampleTransactionBuilder creates and signs a simple transaction, and then

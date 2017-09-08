@@ -5,8 +5,8 @@ import (
 	"encoding/base32"
 	"encoding/binary"
 
-	"github.com/humaniq/go/crc16"
-	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/atticlab-go/crc16"
+	"github.com/humaniq/atticlab-go/support/errors"
 )
 
 // ErrInvalidVersionByte is returned when the version byte from a provided

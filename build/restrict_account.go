@@ -1,8 +1,8 @@
 package build
 
 import (
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // RestrictAccount groups the creation of a new RestrictAccount with a call to Mutate.

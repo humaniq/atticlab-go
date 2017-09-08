@@ -5,9 +5,9 @@ import (
 	"encoding/base64"
 	"fmt"
 
-	"github.com/humaniq/go/keypair"
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/keypair"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // TransactionEnvelopeMutator is a interface that wraps the

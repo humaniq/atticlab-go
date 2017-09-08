@@ -1,10 +1,10 @@
 package build
 
 import (
-	"github.com/humaniq/go/amount"
-	"github.com/humaniq/go/price"
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/amount"
+	"github.com/humaniq/atticlab-go/price"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // CreateOffer creates a new offer

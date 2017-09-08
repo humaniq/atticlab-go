@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/humaniq/go/support/http/httptest"
+	"github.com/humaniq/atticlab-go/support/http/httptest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

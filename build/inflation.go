@@ -1,8 +1,8 @@
 package build
 
 import (
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // Inflation groups the creation of a new InflationBuilder with a call to Mutate.

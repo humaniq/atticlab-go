@@ -5,9 +5,9 @@ import (
 	"errors"
 	"io"
 
-	"github.com/humaniq/go/network"
-	"github.com/humaniq/go/strkey"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/network"
+	"github.com/humaniq/atticlab-go/strkey"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 var (

@@ -1,7 +1,7 @@
 package compliance
 
 import (
-	"github.com/humaniq/go/protocols/compliance"
+	"github.com/humaniq/atticlab-go/protocols/compliance"
 )
 
 // Strategy defines strategy for handling auth requests.

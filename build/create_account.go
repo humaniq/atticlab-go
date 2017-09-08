@@ -1,9 +1,9 @@
 package build
 
 import (
-	"github.com/humaniq/go/amount"
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/amount"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // CreateAccount groups the creation of a new CreateAccountBuilder with a call

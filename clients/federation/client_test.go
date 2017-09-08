@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/humaniq/go/clients/stellartoml"
-	"github.com/humaniq/go/support/http/httptest"
+	"github.com/humaniq/atticlab-go/clients/stellartoml"
+	"github.com/humaniq/atticlab-go/support/http/httptest"
 	"github.com/stretchr/testify/assert"
 )
 

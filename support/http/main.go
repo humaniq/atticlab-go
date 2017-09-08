@@ -10,8 +10,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/support/log"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/support/log"
 	"golang.org/x/net/http2"
 	"gopkg.in/tylerb/graceful.v1"
 )

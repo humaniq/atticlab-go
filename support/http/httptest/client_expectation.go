@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/jarcoal/httpmock"
-	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/atticlab-go/support/errors"
 )
 
 // Return specifies the response for a ClientExpectation, which is then

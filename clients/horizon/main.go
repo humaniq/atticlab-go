@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/humaniq/go/build"
-	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/atticlab-go/build"
+	"github.com/humaniq/atticlab-go/support/errors"
 	"golang.org/x/net/context"
 )
 

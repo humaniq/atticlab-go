@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	b "github.com/humaniq/go/build"
-	"github.com/humaniq/go/clients/horizon"
+	b "github.com/humaniq/atticlab-go/build"
+	"github.com/humaniq/atticlab-go/clients/horizon"
 )
 
 func main() {

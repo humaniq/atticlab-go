@@ -14,7 +14,7 @@ import (
 	"log"
 	"sort"
 
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // Transaction sets are sorted in two different orders: one for hashing and

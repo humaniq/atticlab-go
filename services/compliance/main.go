@@ -9,13 +9,13 @@ import (
 
 	"github.com/rs/cors"
 	"github.com/spf13/cobra"
-	complianceHandler "github.com/humaniq/go/handlers/compliance"
-	complianceProtocol "github.com/humaniq/go/protocols/compliance"
-	"github.com/humaniq/go/support/app"
-	"github.com/humaniq/go/support/config"
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/support/http"
-	"github.com/humaniq/go/support/log"
+	complianceHandler "github.com/humaniq/atticlab-go/handlers/compliance"
+	complianceProtocol "github.com/humaniq/atticlab-go/protocols/compliance"
+	"github.com/humaniq/atticlab-go/support/app"
+	"github.com/humaniq/atticlab-go/support/config"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/support/http"
+	"github.com/humaniq/atticlab-go/support/log"
 )
 
 // Config represents the configuration of a federation server

@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/humaniq/go/build"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/build"
+	"github.com/humaniq/atticlab-go/xdr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

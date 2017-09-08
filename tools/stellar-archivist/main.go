@@ -12,7 +12,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
-	archivist "github.com/humaniq/go/tools/stellar-archivist/internal"
+	archivist "github.com/humaniq/atticlab-go/tools/stellar-archivist/internal"
 )
 
 func status(a string, opts *Options) {

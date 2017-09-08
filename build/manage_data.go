@@ -1,8 +1,8 @@
 package build
 
 import (
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // ClearData removes a key/value pair associated with the source account

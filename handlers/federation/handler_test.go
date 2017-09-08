@@ -5,8 +5,8 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/humaniq/go/support/db/dbtest"
-	"github.com/humaniq/go/support/http/httptest"
+	"github.com/humaniq/atticlab-go/support/db/dbtest"
+	"github.com/humaniq/atticlab-go/support/http/httptest"
 )
 
 func TestHandler(t *testing.T) {

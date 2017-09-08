@@ -7,10 +7,10 @@ import (
 	"log"
 	"strings"
 
-	b "github.com/humaniq/go/build"
-	"github.com/humaniq/go/hash"
-	"github.com/humaniq/go/keypair"
-	"github.com/humaniq/go/xdr"
+	b "github.com/humaniq/atticlab-go/build"
+	"github.com/humaniq/atticlab-go/hash"
+	"github.com/humaniq/atticlab-go/keypair"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // ExampleDecodeTransaction shows the lowest-level process to decode a base64

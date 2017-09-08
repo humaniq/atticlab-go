@@ -7,7 +7,7 @@ import (
 
 	"github.com/Sirupsen/logrus"
 	"github.com/segmentio/go-loggly"
-	"github.com/humaniq/go/support/http/mutil"
+	"github.com/humaniq/atticlab-go/support/http/mutil"
 	"golang.org/x/net/context"
 )
 

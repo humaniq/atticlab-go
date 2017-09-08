@@ -10,8 +10,8 @@ import (
 	"goji.io/pat"
 
 	"github.com/Sirupsen/logrus"
-	serr "github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/support/http/httptest"
+	serr "github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/support/http/httptest"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/net/context"
 )

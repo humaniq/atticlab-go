@@ -2,7 +2,7 @@ package compliance
 
 import (
 	"github.com/asaskevich/govalidator"
-	"github.com/humaniq/go/address"
+	"github.com/humaniq/atticlab-go/address"
 )
 
 func init() {

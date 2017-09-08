@@ -3,9 +3,9 @@ package build
 import (
 	"encoding/hex"
 
-	"github.com/humaniq/go/network"
-	"github.com/humaniq/go/xdr"
-	"github.com/humaniq/go/support/errors"
+	"github.com/humaniq/atticlab-go/network"
+	"github.com/humaniq/atticlab-go/xdr"
+	"github.com/humaniq/atticlab-go/support/errors"
 )
 
 // Transaction groups the creation of a new TransactionBuilder with a call

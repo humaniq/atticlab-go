@@ -3,7 +3,7 @@ package xdr_test
 import (
 	"testing"
 
-	. "github.com/humaniq/go/xdr"
+	. "github.com/humaniq/atticlab-go/xdr"
 	"github.com/stretchr/testify/assert"
 )
 

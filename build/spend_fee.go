@@ -1,9 +1,9 @@
 package build
 
 import (
-	"github.com/humaniq/go/amount"
-	"github.com/humaniq/go/support/errors"
-	"github.com/humaniq/go/xdr"
+	"github.com/humaniq/atticlab-go/amount"
+	"github.com/humaniq/atticlab-go/support/errors"
+	"github.com/humaniq/atticlab-go/xdr"
 )
 
 // SpendFee groups the creation of a new SpendFeeBuilder with a call to Mutate.
